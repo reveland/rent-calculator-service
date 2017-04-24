@@ -4,16 +4,16 @@ except ImportError:
     from distutils.core import setup
 
 config = {
-    'description': 'Rent Calculator Service',
+    'description': 'Rent Reckoner Service',
     'author': 'Peter Reveland',
-    'url': 'URL to get it at.',
-    'download_url': 'Where to download it.',
+    'url': '',
+    'download_url': '',
     'author_email': 'reveland92@gmail.com',
-    'version': '1',
+    'version': '1.0',
     'install_requires': ['nose'],
-    'packages': ['rent_calculator_service'],
+    'packages': ['rent_reckoner'],
     'scripts': [],
-    'name': 'RentCalculatorService'
+    'name': 'rent-reckoner-service'
 }
 
 setup(**config)

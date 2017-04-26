@@ -17,7 +17,8 @@ class RentReckoner(object):
 
     def get_cost_per_skull(self, date):
         count = self.get_dweller_count(date)
-        return sum(list(map(lambda bill: (bill["amount"] * self.get_time_coverage_percent(bill, date, date + 86400) / count), self.data_provider.get_bills())))
+        return sum(list(map(lambda bill: (bill["amount"] * self.get_time_coverage_percent(bill, date, date + 86400)
+                                          / count), self.data_provider.get_bills())))
 
     def get_dweller_count(self, date):
         return sum(map(lambda resident: 1 if self.is_dwell(resident, date) else 0, self.data_provider.get_residents()))

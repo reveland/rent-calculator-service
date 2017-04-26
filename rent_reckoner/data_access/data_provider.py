@@ -30,5 +30,5 @@ class DataProvider(object):
 
     def __increment_end_date_with_one_day(self, items):
         for item in items:
-            item["end"] = item["end"] + 86399
+            item["end"] = item["end"] + 86400
         return items

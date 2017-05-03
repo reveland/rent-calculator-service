@@ -1,3 +1,4 @@
+import numpy as np
 
 
 class RentReckoner(object):
@@ -6,13 +7,17 @@ class RentReckoner(object):
         self.data_provider = data_provider
 
     def get_debt(self, resident):
-        return self.sum_cost_per_skull(resident["start"], resident["end"]) - resident["paid"]
+        sum_cost_per_skull = self.sum_cost_per_skull(
+            resident["start"], resident["end"])
+        sum_cost_per_skull = int(sum_cost_per_skull)
+        paid = int(resident["paid"])
+        return sum_cost_per_skull - paid
 
     def sum_cost(self, start, end):
         return sum(list(map(lambda bill: bill["amount"] * self.get_time_coverage_percent(bill, start, end), self.data_provider.get_bills())))
 
     def sum_cost_per_skull(self, start, end):
-        return sum([self.get_cost_per_skull(date) for date in range(start, end, 86400)])
+        return sum([self.get_cost_per_skull(date) for date in np.arange(start, end, 86400, np.float)])
 
     def get_cost_per_skull(self, date):
         count = self.get_dweller_count(date)

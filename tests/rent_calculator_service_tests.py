@@ -156,7 +156,14 @@ class TestRentReckoner(TestCase):
     @mock.patch.object(RentReckoner, 'sum_cost_per_skull')
     def test_get_debt(self, mock_sum_cost_per_skull):
         mock_sum_cost_per_skull.return_value = 80000
-        assert_equals(self.rent_reckoner.get_debt(TEST_RESIDENTS[0]), 0)
+        actual = self.rent_reckoner.get_debt(TEST_RESIDENTS[0])
+        assert_equals(actual, 0)
+        mock_sum_cost_per_skull.assert_called_with(
+            TEST_RESIDENTS[0]["start"], TEST_RESIDENTS[0]["end"])
+
+        mock_sum_cost_per_skull.return_value = 120000
+        actual = self.rent_reckoner.get_debt(TEST_RESIDENTS[0])
+        assert_equals(actual, 40000)
         mock_sum_cost_per_skull.assert_called_with(
             TEST_RESIDENTS[0]["start"], TEST_RESIDENTS[0]["end"])
 
@@ -173,3 +180,14 @@ class TestRentReckoner(TestCase):
             mock_get_time_coverage_percent.assert_called_with(
                 bill, start, end)
         mock_get_bills.assert_called()
+
+
+class TestIntegration(TestCase):
+
+    @classmethod
+    def setup_class(cls):
+        data_provider = DataProvider(TEST_BILLS_FILE, TEST_RESIDENTS_FILE)
+        cls.rent_reckoner = RentReckoner(data_provider)
+
+    def test_integration(self):
+        self.rent_reckoner.get_debt(TEST_RESIDENTS[0])

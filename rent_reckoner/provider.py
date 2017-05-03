@@ -22,6 +22,12 @@ class DataProvider(object):
         residents = self.__transform_date_to_int(residents)
         return residents
 
+    def get_resident_by_id(self, resident_id):
+        with open(self.residents_file) as data:
+            residents = json.load(data)
+        residents = self.__transform_date_to_int(residents)
+        return next(resident for resident in residents if resident["id"] == resident_id)
+
     def __transform_date_to_int(self, items):
         for item in items:
             item["end"] = calendar.timegm(parse(item["end"]).timetuple())

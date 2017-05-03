@@ -1,7 +1,7 @@
 from unittest import TestCase
 from nose.tools import assert_equals, assert_true, assert_false
-from rent_reckoner.data_access.data_provider import DataProvider
-from rent_reckoner.reckoner.rent_reckoner import RentReckoner
+from rent_reckoner.provider import DataProvider
+from rent_reckoner.reckoner import RentReckoner
 import mock
 import numpy as np
 

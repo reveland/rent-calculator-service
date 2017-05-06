@@ -51,8 +51,6 @@ class RentReckoner(object):
         bills = self.data_provider.get_bills()
         print(bills)
 
-        
-
         sum_per_day = 80000 / 31
         result = {
             "start": "2017-01-01T00:00:00.000Z",
@@ -79,3 +77,6 @@ class RentReckoner(object):
     def to_iso8601(self, date_int):
         date = datetime.datetime.fromtimestamp(date_int)
         return date.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+
+    def get_amount_per_day(self, bill):
+        return bill["amount"] / ((bill["end"] - bill["start"]) / 86400)

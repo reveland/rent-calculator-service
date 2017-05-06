@@ -17,7 +17,8 @@ TEST_RESIDENTS = [{"name": "Peti",
                    "end": RESIDENT_END,
                    "start": RESIDENT_START,
                    "paid": 80000}]
-TEST_BILLS = [{"amount": BILL_AMOUNT,
+TEST_BILLS = [{"id": 0,
+               "amount":  BILL_AMOUNT,
                "type": "rent",
                "start": BILL_START,
                "end": BILL_END}]
@@ -72,7 +73,7 @@ class TestRentReckoner(TestCase):
 
     def test_get_time_coverage_percent(self):
         bill = {
-            "amount": BILL_AMOUNT,
+            "id:": 0, "amount":  BILL_AMOUNT,
             "type": "rent",
             "start": BILL_START,
             "end": BILL_END
@@ -208,7 +209,13 @@ class TestRentReckoner(TestCase):
         mock_get_bills.assert_called()
 
     def test_to_ios8601(self):
-        assert_equals(self.rent_reckoner.to_iso8601(1483228800), "2017-01-01T01:00:00.000Z")
+        assert_equals(self.rent_reckoner.to_iso8601(
+            1483228800), "2017-01-01T01:00:00.000Z")
+
+    def test_get_amount_per_day(self):
+        amount_per_day = 80000 / 31
+        assert_equals(self.rent_reckoner.get_amount_per_day(
+            TEST_BILLS[0]), amount_per_day)
 
 
 class TestIntegration(TestCase):

@@ -181,6 +181,35 @@ class TestRentReckoner(TestCase):
                 bill, start, end)
         mock_get_bills.assert_called()
 
+    @mock.patch.object(DataProvider, 'get_bills')
+    def test_get_bills_to_ui(self, mock_get_bills):
+        mock_get_bills.return_value = TEST_BILLS
+        sum_per_day = 80000 / 31
+        expected = {
+            "start": "2017-01-01T00:00:00.000Z",
+            "end": "2017-01-31T00:00:00.000Z",
+            "sumMaxAmountPerDay": sum_per_day,
+            "types": [{
+                "id": 1,
+                "start": "2017-01-01T00:00:00.000Z",
+                "end": "2017-01-31T00:00:00.000Z",
+                "maxAmountPerDay": sum_per_day,
+                "name": "rent",
+                "bills": [{
+                    "id": 1,
+                    "amount": 80000,
+                    "amountPerDay": sum_per_day,
+                    "start": "2017-01-01T00:00:00.000Z",
+                    "end": "2017-01-31T00:00:00.000Z"
+                }]
+            }]
+        }
+        assert_equals(self.rent_reckoner.get_bills_to_ui(), expected)
+        mock_get_bills.assert_called()
+
+    def test_to_ios8601(self):
+        assert_equals(self.rent_reckoner.to_iso8601(1483228800), "2017-01-01T01:00:00.000Z")
+
 
 class TestIntegration(TestCase):
 

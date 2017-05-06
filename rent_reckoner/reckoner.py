@@ -1,4 +1,5 @@
 import numpy as np
+import datetime
 
 
 class RentReckoner(object):
@@ -45,3 +46,36 @@ class RentReckoner(object):
         if end < bill["start"]:
             valuable_percent = 0
         return valuable_percent
+
+    def get_bills_to_ui(self):
+        bills = self.data_provider.get_bills()
+        print(bills)
+
+        
+
+        sum_per_day = 80000 / 31
+        result = {
+            "start": "2017-01-01T00:00:00.000Z",
+            "end": "2017-01-31T00:00:00.000Z",
+            "sumMaxAmountPerDay": sum_per_day,
+            "types": [{
+                "id": 1,
+                "start": "2017-01-01T00:00:00.000Z",
+                "end": "2017-01-31T00:00:00.000Z",
+                "maxAmountPerDay": sum_per_day,
+                "name": "rent",
+                "bills": [{
+                    "id": 1,
+                    "amount": 80000,
+                    "amountPerDay": sum_per_day,
+                    "start": "2017-01-01T00:00:00.000Z",
+                    "end": "2017-01-31T00:00:00.000Z"
+                }]
+            }]
+        }
+
+        return result
+
+    def to_iso8601(self, date_int):
+        date = datetime.datetime.fromtimestamp(date_int)
+        return date.strftime("%Y-%m-%dT%H:%M:%S.000Z")

@@ -17,7 +17,7 @@ TEST_RESIDENTS = [{"name": "Peti",
                    "end": RESIDENT_END,
                    "start": RESIDENT_START,
                    "paid": 80000}]
-TEST_BILLS = [{"id": 0,
+TEST_BILLS = [{"id": 1,
                "amount":  BILL_AMOUNT,
                "type": "rent",
                "start": BILL_START,
@@ -73,7 +73,8 @@ class TestRentReckoner(TestCase):
 
     def test_get_time_coverage_percent(self):
         bill = {
-            "id:": 0, "amount":  BILL_AMOUNT,
+            "id": 1,
+            "amount":  BILL_AMOUNT,
             "type": "rent",
             "start": BILL_START,
             "end": BILL_END
@@ -187,24 +188,25 @@ class TestRentReckoner(TestCase):
         mock_get_bills.return_value = TEST_BILLS
         sum_per_day = 80000 / 31
         expected = {
-            "start": "2017-01-01T00:00:00.000Z",
-            "end": "2017-01-31T00:00:00.000Z",
+            "start": "2017-01-01T01:00:00.000Z",
+            "end": "2017-01-31T01:00:00.000Z",
             "sumMaxAmountPerDay": sum_per_day,
             "types": [{
                 "id": 1,
-                "start": "2017-01-01T00:00:00.000Z",
-                "end": "2017-01-31T00:00:00.000Z",
+                "start": "2017-01-01T01:00:00.000Z",
+                "end": "2017-01-31T01:00:00.000Z",
                 "maxAmountPerDay": sum_per_day,
                 "name": "rent",
                 "bills": [{
                     "id": 1,
                     "amount": 80000,
                     "amountPerDay": sum_per_day,
-                    "start": "2017-01-01T00:00:00.000Z",
-                    "end": "2017-01-31T00:00:00.000Z"
+                    "start": "2017-01-01T01:00:00.000Z",
+                    "end": "2017-01-31T01:00:00.000Z"
                 }]
             }]
         }
+        assert_equals.__self__.maxDiff = None
         assert_equals(self.rent_reckoner.get_bills_to_ui(), expected)
         mock_get_bills.assert_called()
 

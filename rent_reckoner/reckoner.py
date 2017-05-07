@@ -49,30 +49,67 @@ class RentReckoner(object):
 
     def get_bills_to_ui(self):
         bills = self.data_provider.get_bills()
-        print(bills)
 
-        sum_per_day = 80000 / 31
-        result = {
-            "start": "2017-01-01T00:00:00.000Z",
-            "end": "2017-01-31T00:00:00.000Z",
-            "sumMaxAmountPerDay": sum_per_day,
-            "types": [{
-                "id": 1,
-                "start": "2017-01-01T00:00:00.000Z",
-                "end": "2017-01-31T00:00:00.000Z",
-                "maxAmountPerDay": sum_per_day,
-                "name": "rent",
-                "bills": [{
-                    "id": 1,
-                    "amount": 80000,
-                    "amountPerDay": sum_per_day,
-                    "start": "2017-01-01T00:00:00.000Z",
-                    "end": "2017-01-31T00:00:00.000Z"
-                }]
-            }]
-        }
+        bills.sort(key=lambda x: x["start"], reverse=False)
 
-        return result
+        # data = {"asd": "ewe"}
+        # data["values"] = []
+        # data["values"].append(123)
+        # data["values"].append(321)
+        # print(min(data["values"]))  # 123
+        # print(max(data["values"]))  # 321
+        # print(data)  # {'asd': 'ewe', 'values': [123, 321]}
+        # data["values"].sort(key=lambda x: x, reverse=True)
+        # print(data)  # {'asd': 'ewe', 'values': [321, 123]}
+
+        # add the bills
+        data = {}
+        data["types"] = []
+        for bill in bills:
+            bill_to_add = {
+                "id": bill["id"],
+                "amount": bill["amount"],
+                "amountPerDay": self.get_amount_per_day(bill),
+                "start": bill["start"],
+                "end": bill["end"]
+            }
+            if not bill["type"] in map(lambda type: type["name"], data["types"]):
+                type_to_add = {}
+                type_to_add["name"] = bill["type"]
+                type_to_add["bills"] = []
+                data["types"].append(type_to_add)
+
+            data["types"][self.get_index_of_type(data["types"], bill["type"])]["bills"].append(bill_to_add)
+
+        # fill types fields
+        i = 1
+        for typ in data["types"]:
+            typ["id"] = i
+            typ["maxAmountPerDay"] = max(typ["bills"], key=lambda bill: bill["amountPerDay"])["amountPerDay"]
+            typ["start"] = min(typ["bills"], key=lambda bill: bill["start"])["start"]
+            typ["end"] = max(typ["bills"], key=lambda bill: bill["end"])["end"]
+            i += 1
+
+        # fill data fields
+        data["sumMaxAmountPerDay"] = sum(
+            map(lambda type: type["maxAmountPerDay"], data["types"]))
+        data["start"] = min(data["types"], key=lambda type: type["start"])["start"]
+        data["end"] = max(data["types"], key=lambda type: type["end"])["end"]
+
+        # transfor the date numbers to string
+        data["start"] = self.to_iso8601(data["start"])
+        data["end"] = self.to_iso8601(data["end"] - 86400)
+        for typ in data["types"]:
+            typ["start"] = self.to_iso8601(typ["start"])
+            typ["end"] = self.to_iso8601(typ["end"] - 86400)
+            for bill in typ["bills"]:
+                bill["start"] = self.to_iso8601(bill["start"])
+                bill["end"] = self.to_iso8601(bill["end"] - 86400)
+
+        return data
+
+    def get_index_of_type(self, types, type_name):
+        return next(index for (index, d) in enumerate(types) if d["name"] == type_name)
 
     def to_iso8601(self, date_int):
         date = datetime.datetime.fromtimestamp(date_int)

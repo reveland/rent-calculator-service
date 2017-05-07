@@ -21,7 +21,7 @@ curl localhost:5000/dept/1
 ```
 
 ### Modify the input data
-You can modify any data in `rent-reckoner/data/bills.json` and `rent-reckoner/data/residents.json`. Restart is not necessary.
+You can modify any data in `rent-reckoner/data/bills.json` and `rent-reckoner/data/residents.json`. Restart is not required.
 
 ### UI
-[rent-reckoner-ui](https://github.com/reveland/rent-reckoner-ui)
+To see the bills you need a [rent-reckoner-ui](https://github.com/reveland/rent-reckoner-ui)

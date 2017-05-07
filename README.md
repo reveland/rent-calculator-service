@@ -1,6 +1,4 @@
-# Rent Reckoner
-
-## Usage
+## Rent Reckoner
 
 ### Install
 The service was written/tested in python 3 ([download link](https://www.python.org/downloads/))

@@ -49,37 +49,33 @@ class RentReckoner(object):
 
     def get_bills_to_ui(self):
         bills = self.data_provider.get_bills()
-
         bills.sort(key=lambda x: x["start"], reverse=False)
 
-        # data = {"asd": "ewe"}
-        # data["values"] = []
-        # data["values"].append(123)
-        # data["values"].append(321)
-        # print(min(data["values"]))  # 123
-        # print(max(data["values"]))  # 321
-        # print(data)  # {'asd': 'ewe', 'values': [123, 321]}
-        # data["values"].sort(key=lambda x: x, reverse=True)
-        # print(data)  # {'asd': 'ewe', 'values': [321, 123]}
-
         # add the bills
+        i = 1
         data = {}
         data["types"] = []
+        data["types"].append(self.create_type("rent"))
+        data["types"].append(self.create_type("common"))
+        data["types"].append(self.create_type("inter"))
+        data["types"].append(self.create_type("elec"))
+        data["types"].append(self.create_type("gas"))
+        data["types"].append(self.create_type("water"))
         for bill in bills:
             bill_to_add = {
-                "id": bill["id"],
+                "id": i,
                 "amount": bill["amount"],
                 "amountPerDay": self.get_amount_per_day(bill),
                 "start": bill["start"],
                 "end": bill["end"]
             }
             if not bill["type"] in map(lambda type: type["name"], data["types"]):
-                type_to_add = {}
-                type_to_add["name"] = bill["type"]
-                type_to_add["bills"] = []
-                data["types"].append(type_to_add)
-
+                data["types"].append(self.create_type(bill["type"]))
             data["types"][self.get_index_of_type(data["types"], bill["type"])]["bills"].append(bill_to_add)
+            i += 1
+
+        # filter types that not present in data
+        data["types"] = [typ for typ in data["types"] if len(typ["bills"]) != 0]
 
         # fill types fields
         i = 1
@@ -91,8 +87,7 @@ class RentReckoner(object):
             i += 1
 
         # fill data fields
-        data["sumMaxAmountPerDay"] = sum(
-            map(lambda type: type["maxAmountPerDay"], data["types"]))
+        data["sumMaxAmountPerDay"] = sum(map(lambda type: type["maxAmountPerDay"], data["types"]))
         data["start"] = min(data["types"], key=lambda type: type["start"])["start"]
         data["end"] = max(data["types"], key=lambda type: type["end"])["end"]
 
@@ -107,6 +102,12 @@ class RentReckoner(object):
                 bill["end"] = self.to_iso8601(bill["end"] - 86400)
 
         return data
+
+    def create_type(self, name):
+        type_to_add = {}
+        type_to_add["name"] = name
+        type_to_add["bills"] = []
+        return type_to_add
 
     def get_index_of_type(self, types, type_name):
         return next(index for (index, d) in enumerate(types) if d["name"] == type_name)

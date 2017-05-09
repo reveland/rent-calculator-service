@@ -6,8 +6,8 @@ import json
 
 APP = Flask(__name__)
 
-BILLS_FILE = "D:/github/rent-calculator-service/rent_reckoner/data/bills.json"
-RESIDENTS_FILE = 'D:/github/rent-calculator-service/rent_reckoner/data/residents.json'
+BILLS_FILE = "./rent_reckoner/data/bills.json"
+RESIDENTS_FILE = './rent_reckoner/data/residents.json'
 
 DATA_PROVIDER = DataProvider(BILLS_FILE, RESIDENTS_FILE)
 RENT_RECKONER = RentReckoner(DATA_PROVIDER)

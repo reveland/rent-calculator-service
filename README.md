@@ -3,12 +3,17 @@
 ### Install
 The service was written/tested in python 3 ([download link](https://www.python.org/downloads/))
 
+Then you gonna need some python package
+```
+pip numpy python-dateutil flask
+```
+
 ### Run
 Run this command in the root directory 
 ```
 python ./rent_reckoner/rest.py
 ```
- 
+
 ### Endpoints
 |URL|Des|
 |-|-|

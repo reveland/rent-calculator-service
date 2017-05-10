@@ -7,26 +7,26 @@ class RentReckoner(object):
     def __init__(self, data_provider):
         self.data_provider = data_provider
 
-    def get_debt(self, resident):
+    def get_debt(self, habitant_id, resident):
         sum_cost_per_skull = self.sum_cost_per_skull(
-            resident["start"], resident["end"])
+            habitant_id, resident["start"], resident["end"])
         sum_cost_per_skull = int(sum_cost_per_skull)
         paid = int(resident["paid"])
         return sum_cost_per_skull - paid
 
-    def sum_cost(self, start, end):
-        return sum(list(map(lambda bill: bill["amount"] * self.get_time_coverage_percent(bill, start, end), self.data_provider.get_bills())))
+    def sum_cost(self, habitant_id, start, end):
+        return sum(list(map(lambda bill: bill["amount"] * self.get_time_coverage_percent(bill, start, end), self.data_provider.get_bills(habitant_id))))
 
-    def sum_cost_per_skull(self, start, end):
-        return sum([self.get_cost_per_skull(date) for date in np.arange(start, end, 86400, np.float)])
+    def sum_cost_per_skull(self, habitant_id, start, end):
+        return sum([self.get_cost_per_skull(habitant_id, date) for date in np.arange(start, end, 86400, np.float)])
 
-    def get_cost_per_skull(self, date):
-        count = self.get_dweller_count(date)
+    def get_cost_per_skull(self, habitant_id, date):
+        count = self.get_dweller_count(habitant_id, date)
         return sum(list(map(lambda bill: (bill["amount"] * self.get_time_coverage_percent(bill, date, date + 86400)
-                                          / count), self.data_provider.get_bills())))
+                                          / count), self.data_provider.get_bills(habitant_id))))
 
-    def get_dweller_count(self, date):
-        return sum(map(lambda resident: 1 if self.is_dwell(resident, date) else 0, self.data_provider.get_residents()))
+    def get_dweller_count(self, habitant_id, date):
+        return sum(map(lambda resident: 1 if self.is_dwell(resident, date) else 0, self.data_provider.get_residents(habitant_id)))
 
     def is_dwell(self, resident, date):
         return True if resident["start"] <= date <= resident["end"] else False
@@ -47,8 +47,8 @@ class RentReckoner(object):
             valuable_percent = 0
         return valuable_percent
 
-    def get_bills_to_ui(self):
-        bills = self.data_provider.get_bills()
+    def get_bills_to_ui(self, habitant_id):
+        bills = self.data_provider.get_bills(habitant_id)
         bills.sort(key=lambda x: x["start"], reverse=False)
 
         # add the bills
@@ -71,24 +71,30 @@ class RentReckoner(object):
             }
             if not bill["type"] in map(lambda type: type["name"], data["types"]):
                 data["types"].append(self.create_type(bill["type"]))
-            data["types"][self.get_index_of_type(data["types"], bill["type"])]["bills"].append(bill_to_add)
+            data["types"][self.get_index_of_type(
+                data["types"], bill["type"])]["bills"].append(bill_to_add)
             i += 1
 
         # filter types that not present in data
-        data["types"] = [typ for typ in data["types"] if len(typ["bills"]) != 0]
+        data["types"] = [typ for typ in data["types"]
+                         if len(typ["bills"]) != 0]
 
         # fill types fields
         i = 1
         for typ in data["types"]:
             typ["id"] = i
-            typ["maxAmountPerDay"] = max(typ["bills"], key=lambda bill: bill["amountPerDay"])["amountPerDay"]
-            typ["start"] = min(typ["bills"], key=lambda bill: bill["start"])["start"]
+            typ["maxAmountPerDay"] = max(
+                typ["bills"], key=lambda bill: bill["amountPerDay"])["amountPerDay"]
+            typ["start"] = min(typ["bills"], key=lambda bill: bill["start"])[
+                "start"]
             typ["end"] = max(typ["bills"], key=lambda bill: bill["end"])["end"]
             i += 1
 
         # fill data fields
-        data["sumMaxAmountPerDay"] = sum(map(lambda type: type["maxAmountPerDay"], data["types"]))
-        data["start"] = min(data["types"], key=lambda type: type["start"])["start"]
+        data["sumMaxAmountPerDay"] = sum(
+            map(lambda type: type["maxAmountPerDay"], data["types"]))
+        data["start"] = min(
+            data["types"], key=lambda type: type["start"])["start"]
         data["end"] = max(data["types"], key=lambda type: type["end"])["end"]
 
         # transfor the date numbers to string

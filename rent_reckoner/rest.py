@@ -30,5 +30,11 @@ def get_bills(habitant_id):
     return resp
 
 
+@APP.route("/habitations/<int:habitant_id>/update_depts")
+def update_depts(habitant_id):
+    RENT_RECKONER.update_debts(habitant_id)
+    return "updated"
+
+
 if __name__ == "__main__":
     APP.run()

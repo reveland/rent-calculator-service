@@ -34,6 +34,13 @@ class DataProvider(object):
         residents = self.__transform_date_to_int(residents)
         return next(resident for resident in residents if resident["id"] == resident_id)
 
+    def save_residents(self, habitant_id, residents):
+        with open(self.habitation_files[habitant_id], 'r') as file:
+            habitant = json.load(file)
+        habitant["residents"] = residents
+        with open(self.habitation_files[habitant_id], 'w') as file:
+            file.write(json.dumps(habitant, indent=4))
+
     def __transform_date_to_int(self, items):
         for item in items:
             item["end"] = calendar.timegm(parse(item["end"]).timetuple())

@@ -124,3 +124,13 @@ class RentReckoner(object):
 
     def get_amount_per_day(self, bill):
         return bill["amount"] / ((bill["end"] - bill["start"]) / 86400)
+
+    def update_debts(self, habitant_id):
+        residents = self.data_provider.get_residents(habitant_id)
+
+        for resident in residents:
+            resident["dept"] = self.get_debt(habitant_id, resident)
+            resident["start"] = self.to_iso8601(resident["start"])
+            resident["end"] = self.to_iso8601(resident["end"])
+
+        self.data_provider.save_residents(habitant_id, residents)

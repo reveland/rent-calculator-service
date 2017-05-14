@@ -54,13 +54,13 @@ class RentReckoner(object):
         # add the bills
         i = 1
         data = {}
-        data["types"] = []
-        data["types"].append(self.create_type("rent"))
-        data["types"].append(self.create_type("common"))
-        data["types"].append(self.create_type("inter"))
-        data["types"].append(self.create_type("elec"))
-        data["types"].append(self.create_type("gas"))
-        data["types"].append(self.create_type("water"))
+        data["rows"] = []
+        data["rows"].append(self.create_type("rent"))
+        data["rows"].append(self.create_type("common"))
+        data["rows"].append(self.create_type("inter"))
+        data["rows"].append(self.create_type("elec"))
+        data["rows"].append(self.create_type("gas"))
+        data["rows"].append(self.create_type("water"))
         for bill in bills:
             bill_to_add = {
                 "id": i,
@@ -69,41 +69,41 @@ class RentReckoner(object):
                 "start": bill["start"],
                 "end": bill["end"]
             }
-            if not bill["type"] in map(lambda type: type["name"], data["types"]):
-                data["types"].append(self.create_type(bill["type"]))
-            data["types"][self.get_index_of_type(
-                data["types"], bill["type"])]["bills"].append(bill_to_add)
+            if not bill["type"] in map(lambda type: type["name"], data["rows"]):
+                data["rows"].append(self.create_type(bill["type"]))
+            data["rows"][self.get_index_of_type(
+                data["rows"], bill["type"])]["sections"].append(bill_to_add)
             i += 1
 
-        # filter types that not present in data
-        data["types"] = [typ for typ in data["types"]
-                         if len(typ["bills"]) != 0]
+        # filter rows that not present in data
+        data["rows"] = [typ for typ in data["rows"]
+                         if len(typ["sections"]) != 0]
 
-        # fill types fields
+        # fill rows fields
         i = 1
-        for typ in data["types"]:
+        for typ in data["rows"]:
             typ["id"] = i
             typ["maxAmountPerDay"] = max(
-                typ["bills"], key=lambda bill: bill["amountPerDay"])["amountPerDay"]
-            typ["start"] = min(typ["bills"], key=lambda bill: bill["start"])[
+                typ["sections"], key=lambda bill: bill["amountPerDay"])["amountPerDay"]
+            typ["start"] = min(typ["sections"], key=lambda bill: bill["start"])[
                 "start"]
-            typ["end"] = max(typ["bills"], key=lambda bill: bill["end"])["end"]
+            typ["end"] = max(typ["sections"], key=lambda bill: bill["end"])["end"]
             i += 1
 
         # fill data fields
         data["sumMaxAmountPerDay"] = sum(
-            map(lambda type: type["maxAmountPerDay"], data["types"]))
+            map(lambda type: type["maxAmountPerDay"], data["rows"]))
         data["start"] = min(
-            data["types"], key=lambda type: type["start"])["start"]
-        data["end"] = max(data["types"], key=lambda type: type["end"])["end"]
+            data["rows"], key=lambda type: type["start"])["start"]
+        data["end"] = max(data["rows"], key=lambda type: type["end"])["end"]
 
         # transfor the date numbers to string
         data["start"] = self.to_iso8601(data["start"])
         data["end"] = self.to_iso8601(data["end"] - 86400)
-        for typ in data["types"]:
+        for typ in data["rows"]:
             typ["start"] = self.to_iso8601(typ["start"])
             typ["end"] = self.to_iso8601(typ["end"] - 86400)
-            for bill in typ["bills"]:
+            for bill in typ["sections"]:
                 bill["start"] = self.to_iso8601(bill["start"])
                 bill["end"] = self.to_iso8601(bill["end"] - 86400)
 
@@ -112,7 +112,7 @@ class RentReckoner(object):
     def create_type(self, name):
         type_to_add = {}
         type_to_add["name"] = name
-        type_to_add["bills"] = []
+        type_to_add["sections"] = []
         return type_to_add
 
     def get_index_of_type(self, types, type_name):

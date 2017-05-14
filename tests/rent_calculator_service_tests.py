@@ -199,13 +199,13 @@ class TestRentReckoner(TestCase):
             "start": "2017-01-01T01:00:00.000Z",
             "end": "2017-01-31T01:00:00.000Z",
             "sumMaxAmountPerDay": sum_per_day,
-            "types": [{
+            "rows": [{
                 "id": 1,
                 "start": "2017-01-01T01:00:00.000Z",
                 "end": "2017-01-31T01:00:00.000Z",
                 "maxAmountPerDay": sum_per_day,
                 "name": "rent",
-                "bills": [{
+                "sections": [{
                     "id": 1,
                     "amount": 80000,
                     "amountPerDay": sum_per_day,

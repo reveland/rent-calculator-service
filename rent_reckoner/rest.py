@@ -29,6 +29,13 @@ def get_bills(habitant_id):
     resp.headers['Access-Control-Allow-Origin'] = '*'
     return resp
 
+@APP.route("/habitations/<int:habitant_id>/residents")
+def get_residents(habitant_id):
+    residents = json.dumps(RENT_RECKONER.get_residents_to_ui(
+        habitant_id), default=lambda o: o.__dict__)
+    resp = flask.Response(residents)
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    return resp
 
 @APP.route("/habitations/<int:habitant_id>/update_depts")
 def update_depts(habitant_id):

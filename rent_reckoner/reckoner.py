@@ -55,12 +55,12 @@ class RentReckoner(object):
         i = 1
         data = {}
         data["rows"] = []
-        data["rows"].append(self.create_type("rent"))
-        data["rows"].append(self.create_type("common"))
-        data["rows"].append(self.create_type("inter"))
-        data["rows"].append(self.create_type("elec"))
-        data["rows"].append(self.create_type("gas"))
-        data["rows"].append(self.create_type("water"))
+        data["rows"].append(self.create_row("rent"))
+        data["rows"].append(self.create_row("common"))
+        data["rows"].append(self.create_row("inter"))
+        data["rows"].append(self.create_row("elec"))
+        data["rows"].append(self.create_row("gas"))
+        data["rows"].append(self.create_row("water"))
         for bill in bills:
             bill_to_add = {
                 "id": i,
@@ -70,14 +70,14 @@ class RentReckoner(object):
                 "end": bill["end"]
             }
             if not bill["type"] in map(lambda type: type["name"], data["rows"]):
-                data["rows"].append(self.create_type(bill["type"]))
+                data["rows"].append(self.create_row(bill["type"]))
             data["rows"][self.get_index_of_type(
                 data["rows"], bill["type"])]["sections"].append(bill_to_add)
             i += 1
 
         # filter rows that not present in data
         data["rows"] = [typ for typ in data["rows"]
-                         if len(typ["sections"]) != 0]
+                        if len(typ["sections"]) != 0]
 
         # fill rows fields
         i = 1
@@ -87,7 +87,8 @@ class RentReckoner(object):
                 typ["sections"], key=lambda bill: bill["sectionHeight"])["sectionHeight"]
             typ["start"] = min(typ["sections"], key=lambda bill: bill["start"])[
                 "start"]
-            typ["end"] = max(typ["sections"], key=lambda bill: bill["end"])["end"]
+            typ["end"] = max(
+                typ["sections"], key=lambda bill: bill["end"])["end"]
             i += 1
 
         # fill data fields
@@ -109,7 +110,69 @@ class RentReckoner(object):
 
         return data
 
-    def create_type(self, name):
+    def get_residents_to_ui(self, habitant_id):
+        residents = self.data_provider.get_residents(habitant_id)
+        residents.sort(key=lambda x: x["start"], reverse=False)
+
+        # add the residents
+        i = 1
+        data = {}
+        data["rows"] = []
+        data["rows"].append(self.create_row("Peti"))
+        data["rows"].append(self.create_row("Geri"))
+        data["rows"].append(self.create_row("Oliver"))
+        data["rows"].append(self.create_row("Ara"))
+        data["rows"].append(self.create_row("Adam"))
+        for section in residents:
+            resident_to_add = {
+                "id": i,
+                "amount": section["dept"],
+                "sectionHeight": 1,
+                "start": section["start"],
+                "end": section["end"]
+            }
+            if not section["name"] in map(lambda row: row["name"], data["rows"]):
+                data["rows"].append(self.create_row(section["name"]))
+            data["rows"][self.get_index_of_type(
+                data["rows"], section["name"])]["sections"].append(resident_to_add)
+            i += 1
+
+        # filter rows that not present in data
+        data["rows"] = [row for row in data["rows"]
+                        if len(row["sections"]) != 0]
+
+        # fill rows sections
+        i = 1
+        for row in data["rows"]:
+            row["id"] = i
+            row["maxSectionHeight"] = max(
+                row["sections"], key=lambda section: section["sectionHeight"])["sectionHeight"]
+            row["start"] = min(row["sections"], key=lambda section: section["start"])[
+                "start"]
+            row["end"] = max(
+                row["sections"], key=lambda section: section["end"])["end"]
+            i += 1
+
+        # fill data fields
+        data["sumMaxSectionHeight"] = sum(
+            map(lambda type: type["maxSectionHeight"], data["rows"]))
+        data["start"] = min(
+            data["rows"], key=lambda type: type["start"])["start"]
+        data["end"] = max(data["rows"], key=lambda type: type["end"])["end"]
+
+        # transfor the date numbers to string
+        data["start"] = self.to_iso8601(data["start"])
+        data["end"] = self.to_iso8601(data["end"] - 86400)
+        for row in data["rows"]:
+            row["start"] = self.to_iso8601(row["start"])
+            row["end"] = self.to_iso8601(row["end"] - 86400)
+            for section in row["sections"]:
+                section["start"] = self.to_iso8601(section["start"])
+                section["end"] = self.to_iso8601(section["end"] - 86400)
+
+        return data
+
+    def create_row(self, name):
         type_to_add = {}
         type_to_add["name"] = name
         type_to_add["sections"] = []

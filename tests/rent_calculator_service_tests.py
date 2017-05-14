@@ -198,17 +198,17 @@ class TestRentReckoner(TestCase):
         expected = {
             "start": "2017-01-01T01:00:00.000Z",
             "end": "2017-01-31T01:00:00.000Z",
-            "sumMaxAmountPerDay": sum_per_day,
+            "sumMaxSectionHeight": sum_per_day,
             "rows": [{
                 "id": 1,
                 "start": "2017-01-01T01:00:00.000Z",
                 "end": "2017-01-31T01:00:00.000Z",
-                "maxAmountPerDay": sum_per_day,
+                "maxSectionHeight": sum_per_day,
                 "name": "rent",
                 "sections": [{
                     "id": 1,
                     "amount": 80000,
-                    "amountPerDay": sum_per_day,
+                    "sectionHeight": sum_per_day,
                     "start": "2017-01-01T01:00:00.000Z",
                     "end": "2017-01-31T01:00:00.000Z"
                 }]

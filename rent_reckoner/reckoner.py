@@ -65,7 +65,7 @@ class RentReckoner(object):
             bill_to_add = {
                 "id": i,
                 "amount": bill["amount"],
-                "amountPerDay": self.get_amount_per_day(bill),
+                "sectionHeight": self.get_amount_per_day(bill),
                 "start": bill["start"],
                 "end": bill["end"]
             }
@@ -83,16 +83,16 @@ class RentReckoner(object):
         i = 1
         for typ in data["rows"]:
             typ["id"] = i
-            typ["maxAmountPerDay"] = max(
-                typ["sections"], key=lambda bill: bill["amountPerDay"])["amountPerDay"]
+            typ["maxSectionHeight"] = max(
+                typ["sections"], key=lambda bill: bill["sectionHeight"])["sectionHeight"]
             typ["start"] = min(typ["sections"], key=lambda bill: bill["start"])[
                 "start"]
             typ["end"] = max(typ["sections"], key=lambda bill: bill["end"])["end"]
             i += 1
 
         # fill data fields
-        data["sumMaxAmountPerDay"] = sum(
-            map(lambda type: type["maxAmountPerDay"], data["rows"]))
+        data["sumMaxSectionHeight"] = sum(
+            map(lambda type: type["maxSectionHeight"], data["rows"]))
         data["start"] = min(
             data["rows"], key=lambda type: type["start"])["start"]
         data["end"] = max(data["rows"], key=lambda type: type["end"])["end"]

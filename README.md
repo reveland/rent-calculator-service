@@ -15,12 +15,13 @@ python ./rent_reckoner/rest.py
 ```
 
 ### Endpoints
-|URL|Description|
-|-|-|
-|/habitations/<int:habitant_id>/residents/<int:resident_id>/dept|gives back the resident dept|
-|/habitations/<int:habitant_id>/bills|gives back the bills in a ui desider format|
-|/habitations/<int:habitant_id>/residents"|gives back the residents in a ui desider format|
-|/habitations/<int:habitant_id>/update_depts"|update the residents depths|
+|Method|URL|Description|
+|-|-|-|
+|GET|/habitations/<int:habitant_id>/residents/<int:resident_id>/dept|gives back the resident dept|
+|GET|/habitations/<int:habitant_id>/bills|gives back the bills in a ui desider format|
+|GET|/habitations/<int:habitant_id>/residents"|gives back the residents in a ui desider format|
+|GET|/habitations/<int:habitant_id>/update_depts"|update the residents depths|
+|POST|/habitations/<int:habitant_id>/<start>/<end>/<name>|add new resident|
 
 You can test them like
 ```

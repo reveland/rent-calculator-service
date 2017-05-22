@@ -29,6 +29,7 @@ def get_bills(habitant_id):
     resp.headers['Access-Control-Allow-Origin'] = '*'
     return resp
 
+
 @APP.route("/habitations/<int:habitant_id>/residents")
 def get_residents(habitant_id):
     residents = json.dumps(RENT_RECKONER.get_residents_to_ui(
@@ -37,10 +38,19 @@ def get_residents(habitant_id):
     resp.headers['Access-Control-Allow-Origin'] = '*'
     return resp
 
+
 @APP.route("/habitations/<int:habitant_id>/update_depts")
 def update_depts(habitant_id):
     RENT_RECKONER.update_debts(habitant_id)
     return "updated"
+
+
+@APP.route("/habitations/<int:habitant_id>/residents/<start>/<end>/<name>", methods=['POST'])
+def add_resident(habitant_id, start, end, name):
+    added_resident = DATA_PROVIDER.add_resident(habitant_id, start, end, name)
+    resp = flask.Response(added_resident)
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    return resp
 
 
 if __name__ == "__main__":

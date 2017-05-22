@@ -41,6 +41,21 @@ class DataProvider(object):
         with open(self.habitation_files[habitant_id], 'w') as file:
             file.write(json.dumps(habitant, indent=4))
 
+    def add_resident(self, habitant_id, start, end, name):
+        with open(self.habitation_files[habitant_id], 'r') as file:
+            habitant = json.load(file)
+        resident = {}
+        resident['name'] = name
+        resident['start'] = start
+        resident['end'] = end
+        resident['paid'] = '0'
+        resident['id'] = max(habitant['residents'],
+                             key=lambda resident: resident['id'])['id'] + 1
+        habitant['residents'].append(resident)
+        with open(self.habitation_files[habitant_id], 'w') as file:
+            file.write(json.dumps(habitant, indent=4))
+        return resident
+
     def __transform_date_to_int(self, items):
         for item in items:
             item["end"] = calendar.timegm(parse(item["end"]).timetuple())

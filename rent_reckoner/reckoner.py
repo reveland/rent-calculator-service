@@ -52,7 +52,6 @@ class RentReckoner(object):
         bills.sort(key=lambda x: x["start"], reverse=False)
 
         # add the bills
-        i = 1
         data = {}
         data["rows"] = []
         data["rows"].append(self.create_row("rent"))
@@ -63,7 +62,7 @@ class RentReckoner(object):
         data["rows"].append(self.create_row("water"))
         for bill in bills:
             bill_to_add = {
-                "id": i,
+                "id": bill["id"],
                 "amount": bill["amount"],
                 "sectionHeight": self.get_amount_per_day(bill),
                 "start": bill["start"],
@@ -73,7 +72,6 @@ class RentReckoner(object):
                 data["rows"].append(self.create_row(bill["type"]))
             data["rows"][self.get_index_of_type(
                 data["rows"], bill["type"])]["sections"].append(bill_to_add)
-            i += 1
 
         # filter rows that not present in data
         data["rows"] = [typ for typ in data["rows"]
@@ -115,7 +113,6 @@ class RentReckoner(object):
         residents.sort(key=lambda x: x["start"], reverse=False)
 
         # add the residents
-        i = 1
         data = {}
         data["rows"] = []
         data["rows"].append(self.create_row("Peti"))
@@ -123,19 +120,18 @@ class RentReckoner(object):
         data["rows"].append(self.create_row("Oliver"))
         data["rows"].append(self.create_row("Ara"))
         data["rows"].append(self.create_row("Adam"))
-        for section in residents:
+        for resident in residents:
             resident_to_add = {
-                "id": i,
-                "amount": section["dept"],
+                "id": resident["id"],
+                "amount": resident["dept"],
                 "sectionHeight": 1,
-                "start": section["start"],
-                "end": section["end"]
+                "start": resident["start"],
+                "end": resident["end"]
             }
-            if not section["name"] in map(lambda row: row["name"], data["rows"]):
-                data["rows"].append(self.create_row(section["name"]))
+            if not resident["name"] in map(lambda row: row["name"], data["rows"]):
+                data["rows"].append(self.create_row(resident["name"]))
             data["rows"][self.get_index_of_type(
-                data["rows"], section["name"])]["sections"].append(resident_to_add)
-            i += 1
+                data["rows"], resident["name"])]["sections"].append(resident_to_add)
 
         # filter rows that not present in data
         data["rows"] = [row for row in data["rows"]
@@ -146,11 +142,11 @@ class RentReckoner(object):
         for row in data["rows"]:
             row["id"] = i
             row["maxSectionHeight"] = max(
-                row["sections"], key=lambda section: section["sectionHeight"])["sectionHeight"]
-            row["start"] = min(row["sections"], key=lambda section: section["start"])[
+                row["sections"], key=lambda resident: resident["sectionHeight"])["sectionHeight"]
+            row["start"] = min(row["sections"], key=lambda resident: resident["start"])[
                 "start"]
             row["end"] = max(
-                row["sections"], key=lambda section: section["end"])["end"]
+                row["sections"], key=lambda resident: resident["end"])["end"]
             i += 1
 
         # fill data fields
@@ -166,9 +162,9 @@ class RentReckoner(object):
         for row in data["rows"]:
             row["start"] = self.to_iso8601(row["start"])
             row["end"] = self.to_iso8601(row["end"] - 86400)
-            for section in row["sections"]:
-                section["start"] = self.to_iso8601(section["start"])
-                section["end"] = self.to_iso8601(section["end"] - 86400)
+            for resident in row["sections"]:
+                resident["start"] = self.to_iso8601(resident["start"])
+                resident["end"] = self.to_iso8601(resident["end"] - 86400)
 
         return data
 

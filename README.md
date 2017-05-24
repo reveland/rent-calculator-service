@@ -15,18 +15,20 @@ python ./rent_reckoner/rest.py
 ```
 
 ### Endpoints
-|Method|URL|Description|
-|-|-|-|
-|GET|/habitations/<int:habitant_id>/residents/<int:resident_id>/dept|gives back the resident dept|
-|GET|/habitations/<int:habitant_id>/bills|gives back the bills in a ui desider format|
-|GET|/habitations/<int:habitant_id>/residents"|gives back the residents in a ui desider format|
-|GET|/habitations/<int:habitant_id>/update_depts"|update the residents depths|
-|POST|/habitations/<int:habitant_id>/<start>/<end>/<name>|add new resident|
+|Method|URL|Parametes|Description|
+|-|-|-|-|
+|GET|/habitations/<int:habitant_id>/residents/<int:resident_id>/dept|-|gives back the resident dept|
+|GET|/habitations/<int:habitant_id>/bills|-|gives back the bills in a ui desider format|
+|GET|/habitations/<int:habitant_id>/residents"|-|gives back the residents in a ui desider format|
+|GET|/habitations/<int:habitant_id>/update_depts"|-|update the residents depths|
+|POST|/habitations/<int:habitant_id>/residnts|start, end, name|add new resident|
+|POST|/habitations/<int:habitant_id>/bills|start, end, type, amount|add new bill|
 
 You can test them like
 ```
 curl localhost:5000/habitations/0/update_depts
 ```
+But I recommend getting postman chrome extension
 
 ### Modify the input data
 You can create your own habitation by just create a json file in `rent-reckoner/data/` with `habitation_` prefix, there is a example file named `rent-reckoner/data/habitation_aradi.json`
@@ -50,7 +52,8 @@ The desirable file structure:
             "start": <string>, // like "2016-09-01T00:00:00"
             "end": <string>, // like "2016-09-01T00:00:00"
             "type": <string>,
-            "amount": <int> // like 500 
+            "amount": <int> // like 500
+            "id": <int>
         }
     ]
 }

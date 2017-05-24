@@ -2,7 +2,7 @@ import json
 from reckoner import RentReckoner
 from provider import DataProvider
 import flask
-
+from flask import request
 
 APP = flask.Flask(__name__)
 
@@ -45,10 +45,27 @@ def update_depts(habitant_id):
     return "updated"
 
 
-@APP.route("/habitations/<int:habitant_id>/residents/<start>/<end>/<name>", methods=['POST'])
-def add_resident(habitant_id, start, end, name):
+@APP.route("/habitations/<int:habitant_id>/residents", methods=['POST'])
+def add_resident(habitant_id):
+    start = request.args.get('start')
+    end = request.args.get('end')
+    name = request.args.get('name')
+
     added_resident = DATA_PROVIDER.add_resident(habitant_id, start, end, name)
     resp = flask.Response(added_resident)
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    return resp
+
+
+@APP.route("/habitations/<int:habitant_id>/bills", methods=['POST'])
+def add_bill(habitant_id):
+    start = request.args.get('start')
+    end = request.args.get('end')
+    type = request.args.get('type')
+    amount = request.args.get('amount')
+
+    added_bill = DATA_PROVIDER.add_bill(habitant_id, start, end, type, amount)
+    resp = flask.Response(added_bill)
     resp.headers['Access-Control-Allow-Origin'] = '*'
     return resp
 

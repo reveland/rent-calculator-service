@@ -56,21 +56,20 @@ class DataProvider(object):
             file.write(json.dumps(habitant, indent=4))
         return resident
 
-    def add_bill(self, habitant_id, start, end, name):
-        # TODO
-        # with open(self.habitation_files[habitant_id], 'r') as file:
-        #     habitant = json.load(file)
-        # resident = {}
-        # resident['name'] = name
-        # resident['start'] = start
-        # resident['end'] = end
-        # resident['paid'] = '0'
-        # resident['id'] = max(habitant['residents'],
-        #                      key=lambda resident: resident['id'])['id'] + 1
-        # habitant['residents'].append(resident)
-        # with open(self.habitation_files[habitant_id], 'w') as file:
-        #     file.write(json.dumps(habitant, indent=4))
-        return None
+    def add_bill(self, habitant_id, start, end, type, amount):
+        with open(self.habitation_files[habitant_id], 'r') as file:
+            habitant = json.load(file)
+        bill = {}
+        bill['type'] = type
+        bill['start'] = start
+        bill['end'] = end
+        bill['amount'] = amount
+        bill['id'] = max(habitant['bills'],
+                         key=lambda bill: bill['id'])['id'] + 1
+        habitant['bills'].append(bill)
+        with open(self.habitation_files[habitant_id], 'w') as file:
+            file.write(json.dumps(habitant, indent=4))
+        return bill
 
     def __transform_date_to_int(self, items):
         for item in items:

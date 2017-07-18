@@ -196,21 +196,21 @@ class TestRentReckoner(TestCase):
         mock_get_bills.return_value = TEST_BILLS
         sum_per_day = 80000 / 31
         expected = {
-            "start": "2017-01-01T01:00:00.000Z",
-            "end": "2017-01-31T01:00:00.000Z",
+            "start": "2017-01-01T00:00:00.000000",
+            "end": "2017-01-31T00:00:00.000000",
             "sumMaxSectionHeight": sum_per_day,
             "rows": [{
                 "id": 1,
-                "start": "2017-01-01T01:00:00.000Z",
-                "end": "2017-01-31T01:00:00.000Z",
+                "start": "2017-01-01T00:00:00.000000",
+                "end": "2017-01-31T00:00:00.000000",
                 "maxSectionHeight": sum_per_day,
                 "name": "rent",
                 "sections": [{
                     "id": 1,
                     "amount": 80000,
                     "sectionHeight": sum_per_day,
-                    "start": "2017-01-01T01:00:00.000Z",
-                    "end": "2017-01-31T01:00:00.000Z"
+                    "start": "2017-01-01T00:00:00.000000",
+                    "end": "2017-01-31T00:00:00.000000"
                 }]
             }]
         }
@@ -221,7 +221,7 @@ class TestRentReckoner(TestCase):
 
     def test_to_ios8601(self):
         assert_equals(self.rent_reckoner.to_iso8601(
-            1483228800), "2017-01-01T01:00:00.000Z")
+            1483228800), "2017-01-01T00:00:00.000000")
 
     def test_get_amount_per_day(self):
         amount_per_day = 80000 / 31

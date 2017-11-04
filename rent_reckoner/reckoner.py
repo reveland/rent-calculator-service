@@ -6,6 +6,8 @@ class RentReckoner(object):
 
     def __init__(self, data_provider):
         self.data_provider = data_provider
+        self.residents = self.data_provider.get_residents(0)
+        self.bills = self.data_provider.get_bills(0)
 
     def get_debt(self, habitant_id, resident):
         sum_cost_per_skull = self.sum_cost_per_skull(
@@ -15,7 +17,7 @@ class RentReckoner(object):
         return sum_cost_per_skull - paid
 
     def sum_cost(self, habitant_id, start, end):
-        return sum(list(map(lambda bill: bill["amount"] * self.get_time_coverage_percent(bill, start, end), self.data_provider.get_bills(habitant_id))))
+        return sum(list(map(lambda bill: bill["amount"] * self.get_time_coverage_percent(bill, start, end), self.bills)))
 
     def sum_cost_per_skull(self, habitant_id, start, end):
         return sum([self.get_cost_per_skull(habitant_id, date) for date in np.arange(start, end, step=86400, dtype=np.int64)])
@@ -23,12 +25,13 @@ class RentReckoner(object):
     def get_cost_per_skull(self, habitant_id, date):
         count = self.get_dweller_count(habitant_id, date)
         return sum(list(map(lambda bill: (bill["amount"] * self.get_time_coverage_percent(bill, date, date + 86400)
-                                          / count), self.data_provider.get_bills(habitant_id))))
+                                          / count), self.bills)))
 
     def get_dweller_count(self, habitant_id, date):
-        return sum(map(lambda resident: 1 if self.is_dwell(resident, date) else 0, self.data_provider.get_residents(habitant_id)))
+        return sum(map(lambda resident: 1 if self.is_dwell(resident, date) else 0, self.residents))
 
     def is_dwell(self, resident, date):
+        print(date, resident["start"], resident["end"], resident)
         return True if resident["start"] <= date <= resident["end"] else False
 
     def get_time_coverage_percent(self, bill, start, end):
@@ -183,11 +186,13 @@ class RentReckoner(object):
         return bill["amount"] / ((bill["end"] - bill["start"]) / 86400)
 
     def update_debts(self, habitant_id):
-        residents = self.data_provider.get_residents(habitant_id)
+        residents_copy = self.data_provider.get_residents(habitant_id)
+        self.residents = self.data_provider.get_residents(habitant_id)
+        self.bills = self.data_provider.get_bills(habitant_id)
 
-        for resident in residents:
+        for resident in residents_copy:
             resident["dept"] = self.get_debt(habitant_id, resident)
             resident["start"] = self.to_iso8601(resident["start"])
             resident["end"] = self.to_iso8601(resident["end"])
 
-        self.data_provider.save_residents(habitant_id, residents)
+        self.data_provider.save_residents(habitant_id, residents_copy)

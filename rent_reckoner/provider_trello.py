@@ -33,6 +33,13 @@ class DataProvider(object):
         residents = self.__transform_date_to_int(residents)
         return residents
 
+    def save_residents(self, habitant_id, residents):
+        cards = self.board.open_lists()[3].list_cards()
+        for i in range(len(residents)):
+            row = residents[i]
+            print(row)
+            cards[i].set_name(' '.join([row['start'], row['end'], row['name'], str(row['dept']), str(row['paid'])]))
+
     def __transform_date_to_int(self, items):
         for item in items:
             item["end"] = calendar.timegm(parse(item["end"]).timetuple())

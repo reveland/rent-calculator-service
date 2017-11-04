@@ -1,6 +1,6 @@
 import json
 from reckoner import RentReckoner
-from provider import DataProvider
+from provider_trello import DataProvider
 import flask
 from flask import request
 

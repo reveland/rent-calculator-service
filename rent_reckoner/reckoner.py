@@ -1,8 +1,8 @@
 import numpy as np
 import datetime
 
-
 class RentReckoner(object):
+
 
     def __init__(self, data_provider):
         self.data_provider = data_provider
@@ -62,7 +62,6 @@ class RentReckoner(object):
         data["rows"].append(self.create_row("water"))
         for bill in bills:
             bill_to_add = {
-                "id": bill["id"],
                 "amount": bill["amount"],
                 "sectionHeight": self.get_amount_per_day(bill),
                 "start": bill["start"],
@@ -122,7 +121,6 @@ class RentReckoner(object):
         data["rows"].append(self.create_row("Adam"))
         for resident in residents:
             resident_to_add = {
-                "id": resident["id"],
                 "amount": resident["dept"],
                 "sectionHeight": 1,
                 "start": resident["start"],

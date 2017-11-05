@@ -37,8 +37,10 @@ class DataProvider(object):
         cards = self.board.open_lists()[3].list_cards()
         for i in range(len(residents)):
             row = residents[i]
-            print(row)
             cards[i].set_name(' '.join([row['start'], row['end'], row['name'], str(row['dept']), str(row['paid'])]))
+
+    def add_bill(self, start, end, type, amount):
+        self.board.open_lists()[4].add_card(start + ' ' + end + ' ' + type + ' ' + str(amount))
 
     def __transform_date_to_int(self, items):
         for item in items:
@@ -55,4 +57,4 @@ class DataProvider(object):
         return list(map(lambda r: dict(zip(keys, r)), l))
 
     def __split_them(self, l):
-        return list(map(lambda r: str(r).replace('<', '').replace('>', '').split(' ')[1:], l))    
+        return list(map(lambda r: str(r).replace('<', '').replace('>', '').split(' ')[1:], l))

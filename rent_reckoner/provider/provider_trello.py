@@ -4,7 +4,7 @@ from trello import TrelloClient
 
 class DataProvider(object):
 
-    def __init__(self, path):
+    def __init__(self):
         client = TrelloClient(
             api_key='4c48eb6acff05f1a7105b93ed58e912b',
             api_secret='7196c21a9f0a7a8656bf802b9af2e1cbae447fc30d5ccd64868836cf4d14e74f',

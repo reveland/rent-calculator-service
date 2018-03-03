@@ -2,13 +2,11 @@ import json
 import flask
 from flask import request
 from rent_reckoner.reckoner import RentReckoner
-from rent_reckoner.provider_trello import DataProvider
+from rent_reckoner.provider.google_sheet_provider import DataProvider
 
 app = flask.Flask(__name__)
 
-DATA_PATH = "./rent_reckoner/data/"
-
-DATA_PROVIDER = DataProvider(DATA_PATH)
+DATA_PROVIDER = DataProvider()
 RENT_RECKONER = RentReckoner(DATA_PROVIDER)
 
 def create_response(data):

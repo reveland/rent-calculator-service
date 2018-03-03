@@ -1,6 +1,6 @@
-## Rent Reckoner
+# Rent Reckoner
 
-### Install
+## Install
 The service was written/tested in python 3 ([download link](https://www.python.org/downloads/))
 
 Then you gonna need some python package
@@ -8,13 +8,13 @@ Then you gonna need some python package
 pip numpy python-dateutil flask
 ```
 
-### Run
+## Run
 Run this command in the root directory 
 ```
 python ./rent_reckoner/rest.py
 ```
 
-### Endpoints
+## Endpoints
 |Method|URL|Parametes|Description|
 |-|-|-|-|
 |GET|/habitations/<int:habitant_id>/residents/<int:resident_id>/dept|-|gives back the resident dept|
@@ -30,7 +30,7 @@ curl localhost:5000/habitations/0/update_depts
 ```
 But I recommend getting postman chrome extension
 
-### Modify the input data
+## Modify the input data
 You can create your own habitation by just create a json file in `rent-reckoner/data/` with `habitation_` prefix, there is a example file named `rent-reckoner/data/habitation_aradi.json`
 
 The desirable file structure:
@@ -59,5 +59,5 @@ The desirable file structure:
 }
 ```
 
-### UI
+## UI
 To see the bills you need a [rent-reckoner-ui](https://github.com/reveland/rent-reckoner-ui)

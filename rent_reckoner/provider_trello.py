@@ -16,7 +16,7 @@ class DataProvider(object):
     def get_bills(self, habitant_id):
         bills_cards = self.board.open_lists()[4].list_cards()
         bills_splitted = self.__split_them(bills_cards)
-        bills = self.__dict_them(bills_splitted, ['start', 'end', 'type', 'amount'])
+        bills = self.__dict_them(bills_splitted, ['start', 'end', 'type', 'amount', 'paid_by'])
         for item in bills:
             item["amount"] = float(item["amount"])
         bills = self.__transform_date_to_int(bills)
@@ -39,8 +39,8 @@ class DataProvider(object):
             row = residents[i]
             cards[i].set_name(' '.join([row['start'], row['end'], row['name'], str(row['dept']), str(row['paid'])]))
 
-    def add_bill(self, start, end, type, amount):
-        self.board.open_lists()[4].add_card(start + ' ' + end + ' ' + type + ' ' + str(amount))
+    def add_bill(self, start, end, type, amount, paid_by):
+        self.board.open_lists()[4].add_card(start + ' ' + end + ' ' + type + ' ' + str(amount) + ' ' + paid_by)
 
     def __transform_date_to_int(self, items):
         for item in items:

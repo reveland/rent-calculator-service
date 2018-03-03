@@ -11,7 +11,6 @@ DATA_PATH = "./rent_reckoner/data/"
 DATA_PROVIDER = DataProvider(DATA_PATH)
 RENT_RECKONER = RentReckoner(DATA_PROVIDER)
 
-
 @APP.route("/habitations/<int:habitant_id>/residents/<int:resident_id>/dept")
 def get_dept(habitant_id, resident_id):
     dept = "# %d #" % RENT_RECKONER.get_debt(
@@ -68,7 +67,6 @@ def add_bill(habitant_id):
     resp = flask.Response(added_bill)
     resp.headers['Access-Control-Allow-Origin'] = '*'
     return resp
-
 
 if __name__ == "__main__":
     APP.run()

@@ -3,7 +3,6 @@ import json
 import calendar
 from dateutil.parser import parse
 
-
 class DataProvider(object):
 
     def __init__(self, path):

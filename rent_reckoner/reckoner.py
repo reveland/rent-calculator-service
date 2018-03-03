@@ -10,7 +10,9 @@ class RentReckoner(object):
         sum_cost_per_skull = self.sum_cost_per_skull(
             habitant_id, resident["start"], resident["end"], residents, bills)
         sum_cost_per_skull = int(sum_cost_per_skull)
-        paid = int(resident["paid"])
+
+        paid = sum(map(lambda b: b['amount'], filter(lambda x: x['paid_by'] == resident['name'], bills)))
+
         return sum_cost_per_skull - paid
 
     def sum_cost(self, habitant_id, start, end, bills):
@@ -197,6 +199,8 @@ class RentReckoner(object):
         residents = self.data_provider.get_residents(habitant_id)
         bills = self.data_provider.get_bills(habitant_id)
         
+        bills = list(filter(lambda b: 'paid_by' in b and b['paid_by'] != '', bills))
+
         for resident in residents_copy:
             resident["dept"] = self.get_debt(habitant_id, resident, residents, bills)
             resident["start"] = self.to_iso8601(resident["start"])
@@ -204,3 +208,4 @@ class RentReckoner(object):
 
         self.data_provider.save_residents(habitant_id, residents_copy)
         return residents_copy
+

@@ -1,8 +1,8 @@
 import json
-from reckoner import RentReckoner
-from provider_trello import DataProvider
 import flask
 from flask import request
+from rent_reckoner.reckoner import RentReckoner
+from rent_reckoner.provider_trello import DataProvider
 
 app = flask.Flask(__name__)
 

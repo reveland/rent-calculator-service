@@ -30,6 +30,20 @@ def get_residents_to_ui(habitant_id):
     return create_response(residents_to_ui)
 
 
+@APP.route("/habitations/<int:habitant_id>/bills")
+def get_bills(habitant_id):
+    bills = DATA_PROVIDER.get_bills(habitant_id)
+    bills = json.dumps(bills)
+    return create_response(bills)
+
+
+@APP.route("/habitations/<int:habitant_id>/residents")
+def get_residents(habitant_id):
+    residents = DATA_PROVIDER.get_residents(habitant_id)
+    residents = json.dumps(residents)
+    return create_response(residents)
+
+
 @APP.route("/habitations/<int:habitant_id>/update_depts")
 def update_depts(habitant_id):
     RENT_RECKONER.update_debts(habitant_id)

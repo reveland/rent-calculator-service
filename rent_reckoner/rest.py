@@ -52,24 +52,18 @@ def update_depts(habitant_id):
 
 @APP.route("/habitations/<int:habitant_id>/residents", methods=['POST'])
 def add_resident(habitant_id):
-    start = request.args.get('start')
-    end = request.args.get('end')
-    name = request.args.get('name')
+    r = request.get_json()
 
-    added_resident = DATA_PROVIDER.add_resident(habitant_id, start, end, name)
-    return create_response(added_resident)
+    added_resident = DATA_PROVIDER.add_resident(habitant_id, r['start'], r['end'], r['name'])
+    return create_response(r)
 
 
 @APP.route("/habitations/<int:habitant_id>/bills", methods=['POST'])
 def add_bill(habitant_id):
-    start = request.args.get('start')
-    end = request.args.get('end')
-    type = request.args.get('type')
-    amount = request.args.get('amount')
-    paid_by = request.args.get('paid_by')
+    b = request.get_json()
 
-    added_bill = DATA_PROVIDER.add_bill(habitant_id, start, end, type, amount, paid_by)
-    return create_response(added_bill)
+    added_bill = DATA_PROVIDER.add_bill(habitant_id, b['start'], b['end'], b['type'], b['amount'], b['paid_by'])
+    return create_response(b)
 
 if __name__ == "__main__":
     APP.run()

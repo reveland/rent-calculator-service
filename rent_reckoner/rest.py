@@ -57,9 +57,7 @@ def add_resident(habitant_id):
     name = request.args.get('name')
 
     added_resident = DATA_PROVIDER.add_resident(habitant_id, start, end, name)
-    resp = flask.Response(added_resident)
-    resp.headers['Access-Control-Allow-Origin'] = '*'
-    return resp
+    return create_response(added_resident)
 
 
 @APP.route("/habitations/<int:habitant_id>/bills", methods=['POST'])
@@ -68,11 +66,10 @@ def add_bill(habitant_id):
     end = request.args.get('end')
     type = request.args.get('type')
     amount = request.args.get('amount')
+    paid_by = request.args.get('paid_by')
 
-    added_bill = DATA_PROVIDER.add_bill(habitant_id, start, end, type, amount)
-    resp = flask.Response(added_bill)
-    resp.headers['Access-Control-Allow-Origin'] = '*'
-    return resp
+    added_bill = DATA_PROVIDER.add_bill(habitant_id, start, end, type, amount, paid_by)
+    return create_response(added_bill)
 
 if __name__ == "__main__":
     APP.run()

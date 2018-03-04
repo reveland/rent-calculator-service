@@ -36,11 +36,11 @@ class DataProvider(ABC):
         source_data = self.get_bills(habitant_id)
         target_data = target_data_provider.get_bills(habitant_id)
 
-        result = []
+        result_bills = []
         target_data.extend(source_data)
         for bill in target_data:
-            if bill not in result:
-                result.append(bill)
+            if bill not in result_bills:
+                result_bills.append(bill)
 
-        target_data_provider.save_bills(result)
-        return result
+        target_data_provider.save_bills(habitant_id, result_bills)
+        return result_bills

@@ -61,7 +61,7 @@ def add_bill(habitant_id):
     GOOGLE_DATA_PROVIDER.add_bill(habitant_id, bill['start'], bill['end'], bill['type'], bill['amount'], bill['paid_by'])
     return create_response(bill)
 
-@app.route("/habitations/<int:habitant_id>/merge/<int:source_id>/<int:target_id>", methods=['POST'])
+@app.route("/habitations/<int:habitant_id>/merge/<int:source_id>/<int:target_id>", methods=['GET'])
 def merge(habitant_id, source_id, target_id):
     DATA_PROVIDERS[source_id].merge(habitant_id, DATA_PROVIDERS[target_id])
     return 'merged'

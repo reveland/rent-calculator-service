@@ -1,7 +1,7 @@
 import json
 import flask
 from flask import request
-from reckoner import RentReckoner
+from rent_reckoner.reckoner import RentReckoner
 from rent_reckoner.provider.google_sheet_provider import GoogleDataProvider
 
 app = flask.Flask(__name__)

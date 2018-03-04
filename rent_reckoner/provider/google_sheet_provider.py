@@ -20,14 +20,15 @@ class DataProvider(object):
     def get_residents(self, habitant_id):
         residents = self.   residents_sheet.get_all_records()
         residents = self.__transform_date_to_int(residents)
+        residents = self.__increment_end_date_with_one_day(residents)
         return residents
 
     def save_residents(self, habitant_id, residents):
-        start_cell_list = sheet.range('A2:A' + str(len(residents) + 1))
-        end_cell_list = sheet.range('B2:B' + str(len(residents) + 1))
-        type_cell_list = sheet.range('C2:C' + str(len(residents) + 1))
-        amount_cell_list = sheet.range('D2:D' + str(len(residents) + 1))
-        paid_by_cell_list = sheet.range('E2:E' + str(len(residents) + 1))
+        start_cell_list = self.residents_sheet.range('A2:A' + str(len(residents) + 1))
+        end_cell_list = self.residents_sheet.range('B2:B' + str(len(residents) + 1))
+        type_cell_list = self.residents_sheet.range('C2:C' + str(len(residents) + 1))
+        amount_cell_list = self.residents_sheet.range('D2:D' + str(len(residents) + 1))
+        paid_by_cell_list = self.residents_sheet.range('E2:E' + str(len(residents) + 1))
 
         for i in range(len(residents)):
             start_cell_list[i].value = residents[i]['start']
@@ -36,11 +37,11 @@ class DataProvider(object):
             amount_cell_list[i].value = str(residents[i]['dept'])
             paid_by_cell_list[i].value = str(residents[i]['paid'])
 
-        sheet.update_cells(start_cell_list)
-        sheet.update_cells(end_cell_list)
-        sheet.update_cells(type_cell_list)
-        sheet.update_cells(amount_cell_list)
-        sheet.update_cells(paid_by_cell_list)
+        self.residents_sheet.update_cells(start_cell_list)
+        self.residents_sheet.update_cells(end_cell_list)
+        self.residents_sheet.update_cells(type_cell_list)
+        self.residents_sheet.update_cells(amount_cell_list)
+        self.residents_sheet.update_cells(paid_by_cell_list)
 
     def add_bill(self, habitant_id, start, end, type, amount, paid_by):
         self.bills_sheet.append_row([start, end, type, str(amount), paid_by])

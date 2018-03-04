@@ -21,7 +21,7 @@ class TrelloDataProvider(DataProvider):
         for item in bills:
             item["amount"] = float(item["amount"])
         bills = self.__transform_date_to_int(bills)
-        bills = self.__increment_end_date_with_one_day(bills)
+        print(len(bills))
         return bills
 
     def get_residents(self, habitant_id):
@@ -45,12 +45,6 @@ class TrelloDataProvider(DataProvider):
         for i in range(len(residents)):
             row = residents[i]
             cards[i].set_name(' '.join([row['start'], row['end'], row['name'], str(row['dept']), str(row['paid'])]))
-
-    def save_bills(self, habitant_id, bills):
-        cards = self.board.open_lists()[4].list_cards()
-        for i in range(len(bills)):
-            row = bills[i]
-            cards[i].set_name(' '.join([row['start'], row['end'], row['type'], str(row['amount']), str(row['paid_by'])]))
 
     def __transform_date_to_int(self, items):
         for item in items:

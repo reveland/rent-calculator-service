@@ -21,6 +21,14 @@ b2 = {
     "paid_by": ""
 }
 
+b22 = {
+    "start": 1472688000,
+    "end": 1475193600,
+    "type": "Rent",
+    "amount": 80000,
+    "paid_by": ""
+}
+
 b3 = {
     "start": 1468886400,
     "end": 1474070400,
@@ -38,14 +46,14 @@ class TestRentReckoner(unittest.TestCase):
 
     @mock.patch.object(DataProvider, 'get_bills', autospec=True)
     def test_merge(self, mock_get_bills):
-        attrs = {'get_bills.return_value': [b1, b2], 'save_bills.return_value': 0}
+        attrs = {'get_bills.return_value': [b1, b22], 'add_bill.return_value': 0}
         target = Mock(**attrs)
         mock_get_bills.return_value = [b2, b3]
 
         actual = self.undertest.merge(1, target)
         
-        target.save_bills.assert_called_with([b1, b2, b3])
-        self.assertEqual(actual, [b1, b2, b3])
+        target.add_bill.assert_called_with(1, '2016-07-19', '2016-09-17', 'Heat/gas', 580, '')
+        self.assertEqual(actual, [b3])
 
 if __name__ == '__main__':
     unittest.main()

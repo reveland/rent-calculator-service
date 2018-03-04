@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import datetime
 
 class DataProvider(ABC):
 
@@ -15,32 +16,36 @@ class DataProvider(ABC):
         pass
 
     @abstractmethod
-    def add_bill(self, habitant_id, start, end, type, amount):
+    def add_bill(self, habitant_id, start, end, type, amount, paid_by):
         pass
 
     @abstractmethod
     def save_residents(self, habitant_id, residents):
         pass
 
-    @abstractmethod
-    def save_bills(self, habitant_id, bills):
-        pass
-
     def merge(self, habitant_id, target_data_provider):
-        """Merge data from source DataProvider to target DataProvider
-        Methode:
-            - get target data provider bills
-            - get source data provider bills
-            - merge them
-            - save the whole on target data provider"""
+        """Merge data from source DataProvider to target DataProvider"""
         source_data = self.get_bills(habitant_id)
         target_data = target_data_provider.get_bills(habitant_id)
 
-        result_bills = []
-        target_data.extend(source_data)
-        for bill in target_data:
-            if bill not in result_bills:
-                result_bills.append(bill)
+        for bill in source_data:
+            bill["start"] = self.to_iso8601(bill["start"])
+            bill["end"] = self.to_iso8601(bill["end"])
 
-        target_data_provider.save_bills(habitant_id, result_bills)
+        for bill in target_data:
+            bill["start"] = self.to_iso8601(bill["start"])
+            bill["end"] = self.to_iso8601(bill["end"])
+
+        result_bills = []
+        for bill in source_data:
+            if bill not in target_data:
+                result_bills.append(bill)
+        
+        for bill in result_bills:
+            target_data_provider.add_bill(habitant_id, bill['start'], bill['end'], bill['type'], bill['amount'], bill['paid_by'])
         return result_bills
+    
+    def to_iso8601(self, date_int):
+        print(date_int)
+        date = datetime.datetime.fromtimestamp(date_int)
+        return date.strftime("%Y-%m-%d")

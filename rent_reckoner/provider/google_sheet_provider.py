@@ -50,26 +50,6 @@ class GoogleDataProvider(DataProvider):
         self.residents_sheet.update_cells(dept_cell_list)
         self.residents_sheet.update_cells(paid_cell_list)
 
-    def save_bills(self, habitant_id, bills):
-        start_cell_list = self.bills_sheet.range('A2:A' + str(len(bills) + 1))
-        end_cell_list = self.bills_sheet.range('B2:B' + str(len(bills) + 1))
-        type_cell_list = self.bills_sheet.range('C2:C' + str(len(bills) + 1))
-        amount_cell_list = self.bills_sheet.range('D2:D' + str(len(bills) + 1))
-        paid_by_cell_list = self.bills_sheet.range('E2:E' + str(len(bills) + 1))
-
-        for i in range(len(bills)):
-            start_cell_list[i].value = bills[i]['start']
-            end_cell_list[i].value = bills[i]['end']
-            type_cell_list[i].value = bills[i]['type']
-            amount_cell_list[i].value = str(bills[i]['amount'])
-            paid_by_cell_list[i].value = str(bills[i]['paid_by'])
-
-        self.bills_sheet.update_cells(start_cell_list)
-        self.bills_sheet.update_cells(end_cell_list)
-        self.bills_sheet.update_cells(type_cell_list)
-        self.bills_sheet.update_cells(amount_cell_list)
-        self.bills_sheet.update_cells(paid_by_cell_list)
-
     def __transform_date_to_int(self, items):
         for item in items:
             item["end"] = calendar.timegm(parse(item["end"]).timetuple())

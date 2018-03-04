@@ -1,8 +1,9 @@
 import calendar
 from dateutil.parser import parse
 from trello import TrelloClient
+from rent_reckoner.provider.provider import DataProvider
 
-class DataProvider(object):
+class TrelloDataProvider(DataProvider):
 
     def __init__(self):
         client = TrelloClient(

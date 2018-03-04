@@ -2,8 +2,9 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import calendar
 from dateutil.parser import parse
+from rent_reckoner.provider.provider import DataProvider
 
-class DataProvider(object):
+class GoogleDataProvider(DataProvider):
 
     def __init__(self):
         scope = ['https://spreadsheets.google.com/feeds']

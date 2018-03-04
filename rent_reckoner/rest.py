@@ -1,12 +1,12 @@
 import json
 import flask
 from flask import request
-from rent_reckoner.reckoner import RentReckoner
-from rent_reckoner.provider.google_sheet_provider import DataProvider
+from reckoner import RentReckoner
+from rent_reckoner.provider.google_sheet_provider import GoogleDataProvider
 
 app = flask.Flask(__name__)
 
-DATA_PROVIDER = DataProvider()
+DATA_PROVIDER = GoogleDataProvider()
 RENT_RECKONER = RentReckoner(DATA_PROVIDER)
 
 def create_response(data):

@@ -26,11 +26,21 @@ class DataProvider(ABC):
     def save_bills(self, habitant_id, bills):
         pass
 
-    def merge(self, data_provider):
+    def merge(self, habitant_id, target_data_provider):
         """Merge data from source DataProvider to target DataProvider
         Methode:
             - get target data provider bills
             - get source data provider bills
             - merge them
             - save the whole on target data provider"""
-        
+        source_data = self.get_bills(habitant_id)
+        target_data = target_data_provider.get_bills(habitant_id)
+
+        result = []
+        target_data.extend(source_data)
+        for bill in target_data:
+            if bill not in result:
+                result.append(bill)
+
+        target_data_provider.save_bills(result)
+        return result

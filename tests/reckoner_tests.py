@@ -2,7 +2,7 @@ import unittest
 import mock
 
 from rent_reckoner.reckoner import RentReckoner
-from rent_reckoner.provider import DataProvider
+from rent_reckoner.provider.provider import DataProvider
 
 class TestRentReckoner(unittest.TestCase):
 

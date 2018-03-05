@@ -12,7 +12,7 @@ GOOGLE_DATA_PROVIDER = GoogleDataProvider()
 TRELLO_DATA_PROVIDER = TrelloDataProvider()
 SPLITWISE_DATA_PROVIDER = SplitwiseDataProvider()
 DATA_PROVIDERS = [GOOGLE_DATA_PROVIDER, TRELLO_DATA_PROVIDER, SPLITWISE_DATA_PROVIDER]
-data_providet_id = 2
+data_providet_id = 0
 RENT_RECKONER = RentReckoner(DATA_PROVIDERS[data_providet_id])
 
 def create_response(data):

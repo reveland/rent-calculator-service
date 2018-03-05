@@ -12,7 +12,8 @@ GOOGLE_DATA_PROVIDER = GoogleDataProvider()
 TRELLO_DATA_PROVIDER = TrelloDataProvider()
 SPLITWISE_DATA_PROVIDER = SplitwiseDataProvider()
 DATA_PROVIDERS = [GOOGLE_DATA_PROVIDER, TRELLO_DATA_PROVIDER, SPLITWISE_DATA_PROVIDER]
-RENT_RECKONER = RentReckoner(DATA_PROVIDERS[2])
+data_providet_id = 2
+RENT_RECKONER = RentReckoner(DATA_PROVIDERS[data_providet_id])
 
 def create_response(data):
     resp = flask.Response(data)
@@ -33,13 +34,13 @@ def get_residents_to_ui(habitant_id):
 
 @app.route("/habitations/<int:habitant_id>/bills")
 def get_bills(habitant_id):
-    bills = GOOGLE_DATA_PROVIDER.get_bills(habitant_id)
+    bills = DATA_PROVIDERS[data_providet_id].get_bills(habitant_id)
     bills = json.dumps(bills)
     return create_response(bills)
 
 @app.route("/habitations/<int:habitant_id>/residents")
 def get_residents(habitant_id):
-    residents = GOOGLE_DATA_PROVIDER.get_residents(habitant_id)
+    residents = DATA_PROVIDERS[data_providet_id].get_residents(habitant_id)
     residents = json.dumps(residents)
     return create_response(residents)
 
@@ -52,14 +53,14 @@ def update_depts(habitant_id):
 def add_resident(habitant_id):
     resident = request.get_json()
 
-    GOOGLE_DATA_PROVIDER.add_resident(habitant_id, resident['start'], resident['end'], resident['name'])
+    DATA_PROVIDERS[data_providet_id].add_resident(habitant_id, resident['start'], resident['end'], resident['name'])
     return create_response(resident)
 
 @app.route("/habitations/<int:habitant_id>/bills", methods=['POST'])
 def add_bill(habitant_id):
     bill = request.get_json()
 
-    GOOGLE_DATA_PROVIDER.add_bill(habitant_id, bill['start'], bill['end'], bill['type'], bill['amount'], bill['paid_by'])
+    DATA_PROVIDERS[data_providet_id].add_bill(habitant_id, bill['start'], bill['end'], bill['type'], bill['amount'], bill['paid_by'])
     return create_response(bill)
 
 @app.route("/habitations/<int:habitant_id>/merge/<int:source_id>/<int:target_id>", methods=['GET'])

@@ -6,3 +6,4 @@ py-trello
 numpy
 gspread
 oauth2client
+splitwise

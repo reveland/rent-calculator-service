@@ -1,6 +1,7 @@
 import json
 import flask
 from flask import request
+from splitwise import Splitwise
 from rent_reckoner.reckoner import RentReckoner
 from rent_reckoner.provider.google_sheet_provider import GoogleDataProvider
 from rent_reckoner.provider.provider_trello import TrelloDataProvider
@@ -9,6 +10,7 @@ app = flask.Flask(__name__)
 
 GOOGLE_DATA_PROVIDER = GoogleDataProvider()
 TRELLO_DATA_PROVIDER = TrelloDataProvider()
+# SPLITWISE_DATA_PROVIDER = SplitwiseDataProvider()
 RENT_RECKONER = RentReckoner(GOOGLE_DATA_PROVIDER)
 
 DATA_PROVIDERS = [GOOGLE_DATA_PROVIDER, TRELLO_DATA_PROVIDER]
@@ -65,6 +67,23 @@ def add_bill(habitant_id):
 def merge(habitant_id, source_id, target_id):
     DATA_PROVIDERS[source_id].merge(habitant_id, DATA_PROVIDERS[target_id])
     return 'merged'
+
+@app.route("/splitwise", methods=['GET'])
+def splitwise():
+    api_key = 'GrsqkubjdaoTlyCGAeZbFQZMZHZx5tnKvtaxeuea'
+    api_secret = '3zgKW7CWurwhlM8jAWQWJBoDeegCMgE7ebNatlZ2'
+    sw = Splitwise(api_key,api_secret)
+    url, secret = sw.getAuthorizeURL()
+    return '<a href="' + url + '">Splitwise</a>'
+
+@app.route("/splitwise/auth", methods=['GET'])
+def splitwise_auth():
+    oauth_token = request.args.get("oauth_token")
+    oauth_verifier = request.args.get("oauth_verifier")
+    print(oauth_token, oauth_verifier)
+    # access_token = sw.getAccessToken(oauth_token,secret,oauth_verifier)
+    # sw.setAccessToken(access_token)
+    return oauth_verifier
 
 if __name__ == "__main__":
     app.run(debug=True)

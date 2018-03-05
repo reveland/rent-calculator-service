@@ -21,7 +21,6 @@ class TrelloDataProvider(DataProvider):
         for item in bills:
             item["amount"] = float(item["amount"])
         bills = self.__transform_date_to_int(bills)
-        print(len(bills))
         return bills
 
     def get_residents(self, habitant_id):

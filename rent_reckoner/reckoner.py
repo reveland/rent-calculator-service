@@ -189,7 +189,7 @@ class RentReckoner(object):
 
     def to_iso8601(self, date_int):
         date = datetime.datetime.fromtimestamp(date_int)
-        return date.strftime("%Y-%m-%dT00:00:00.000000")
+        return date.strftime("%Y-%m-%d")
 
     def get_amount_per_day(self, bill):
         return bill["amount"] / ((bill["end"] - bill["start"]) / 86400)

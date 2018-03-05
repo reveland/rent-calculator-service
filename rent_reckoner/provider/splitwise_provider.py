@@ -1,5 +1,6 @@
 import calendar
 from dateutil.parser import parse
+from splitwise import Splitwise
 from rent_reckoner.provider.provider import DataProvider
 
 class SplitwiseDataProvider(DataProvider):
@@ -9,16 +10,16 @@ class SplitwiseDataProvider(DataProvider):
         api_secret = '3zgKW7CWurwhlM8jAWQWJBoDeegCMgE7ebNatlZ2'
         self.sw = Splitwise(api_key,api_secret)
 
-    def get_auth_url():
-        url, self.secret = sw.getAuthorizeURL()
+    def get_auth_url(self):
+        url, self.secret = self.sw.getAuthorizeURL()
         return url
         
-    def auth(oauth_token, oauth_verifier):
-        access_token = sw.getAccessToken(oauth_token, self.secret, oauth_verifier)
+    def auth(self, oauth_token, oauth_verifier):
+        access_token = self.sw.getAccessToken(oauth_token, self.secret, oauth_verifier)
         self.sw.setAccessToken(access_token)
 
     def get_bills(self, habitant_id):
-        bills =  self.bills_sheet.get_all_records()
+        bills =  []
         bills = self.__transform_date_to_int(bills)
         bills = self.__increment_end_date_with_one_day(bills)
         return bills
@@ -34,8 +35,6 @@ class SplitwiseDataProvider(DataProvider):
 
     def save_residents(self, habitant_id, residents):
         pass
-
-    def 
 
     def __transform_date_to_int(self, items):
         for item in items:

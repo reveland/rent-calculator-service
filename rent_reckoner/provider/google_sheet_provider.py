@@ -16,12 +16,12 @@ class GoogleDataProvider(DataProvider):
     def get_bills(self, habitant_id):
         bills =  self.bills_sheet.get_all_records()
         bills = self.__transform_date_to_int(bills)
+        bills = self.__increment_end_date_with_one_day(bills)
         return bills
 
     def get_residents(self, habitant_id):
         residents = self.   residents_sheet.get_all_records()
         residents = self.__transform_date_to_int(residents)
-        residents = self.__increment_end_date_with_one_day(residents)
         return residents
 
     def add_bill(self, habitant_id, start, end, type, amount, paid_by):

@@ -16,7 +16,11 @@ class SplitwiseDataProvider(DataProvider):
     def __init__(self):
         api_key = 'GrsqkubjdaoTlyCGAeZbFQZMZHZx5tnKvtaxeuea'
         api_secret = '3zgKW7CWurwhlM8jAWQWJBoDeegCMgE7ebNatlZ2'
+        self.p = re.compile('[^0-9][0-1][0-9]\.[0-3][0-9]')
         self.sw = Splitwise(api_key,api_secret)
+        self.categories_of_interest = None
+        self.aradi = None
+        self.secret = None
 
     def get_auth_url(self):
         url, self.secret = self.sw.getAuthorizeURL()
@@ -125,7 +129,7 @@ class SplitwiseDataProvider(DataProvider):
 
     def get_start_end(self, b):
         date = parser.parse(b.getDate()[:11])
-        found = list(map(lambda x: x[1:], p.findall('b' + b.description)))
+        found = list(map(lambda x: x[1:], self.p.findall('b' + b.description)))
         if len(found) >= 2:
             return self.get_overlapped_start_end(date, found)
         else:

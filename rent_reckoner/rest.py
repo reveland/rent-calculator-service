@@ -1,7 +1,6 @@
 import json
 import flask
 from flask import request
-from splitwise import Splitwise
 from rent_reckoner.reckoner import RentReckoner
 from rent_reckoner.provider.google_sheet_provider import GoogleDataProvider
 from rent_reckoner.provider.trello_provider import TrelloDataProvider
@@ -12,9 +11,8 @@ app = flask.Flask(__name__)
 GOOGLE_DATA_PROVIDER = GoogleDataProvider()
 TRELLO_DATA_PROVIDER = TrelloDataProvider()
 SPLITWISE_DATA_PROVIDER = SplitwiseDataProvider()
-RENT_RECKONER = RentReckoner(GOOGLE_DATA_PROVIDER)
-
-DATA_PROVIDERS = [GOOGLE_DATA_PROVIDER, TRELLO_DATA_PROVIDER]
+DATA_PROVIDERS = [GOOGLE_DATA_PROVIDER, TRELLO_DATA_PROVIDER, SPLITWISE_DATA_PROVIDER]
+RENT_RECKONER = RentReckoner(DATA_PROVIDERS[2])
 
 def create_response(data):
     resp = flask.Response(data)

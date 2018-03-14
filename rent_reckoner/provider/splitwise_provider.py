@@ -92,7 +92,6 @@ class SplitwiseDataProvider(DataProvider):
             em = int(found[1][0:2])
             ed = int(found[1][3:5])
             if month < 6:
-                print(date.year, sm, sd)
                 if sm > 6:
                     start = datetime(date.year - 1, sm, sd)
                 else:

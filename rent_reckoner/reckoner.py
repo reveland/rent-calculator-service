@@ -109,13 +109,13 @@ class RentReckoner(object):
 
         # transfor the date numbers to string
         data["start"] = self.to_iso8601(data["start"])
-        data["end"] = self.to_iso8601(data["end"] - 86400)
+        data["end"] = self.to_iso8601(data["end"])
         for typ in data["rows"]:
             typ["start"] = self.to_iso8601(typ["start"])
-            typ["end"] = self.to_iso8601(typ["end"] - 86400)
+            typ["end"] = self.to_iso8601(typ["end"])
             for bill in typ["sections"]:
                 bill["start"] = self.to_iso8601(bill["start"])
-                bill["end"] = self.to_iso8601(bill["end"] - 86400)
+                bill["end"] = self.to_iso8601(bill["end"])
 
         return data
 
@@ -168,13 +168,13 @@ class RentReckoner(object):
 
         # transfor the date numbers to string
         data["start"] = self.to_iso8601(data["start"])
-        data["end"] = self.to_iso8601(data["end"] - 86400)
+        data["end"] = self.to_iso8601(data["end"])
         for row in data["rows"]:
             row["start"] = self.to_iso8601(row["start"])
-            row["end"] = self.to_iso8601(row["end"] - 86400)
+            row["end"] = self.to_iso8601(row["end"])
             for resident in row["sections"]:
                 resident["start"] = self.to_iso8601(resident["start"])
-                resident["end"] = self.to_iso8601(resident["end"] - 86400)
+                resident["end"] = self.to_iso8601(resident["end"])
 
         return data
 

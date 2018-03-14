@@ -139,7 +139,7 @@ class SplitwiseDataProvider(DataProvider):
 
     def map_bill(self, b):
         start_end = self.get_start_end(b)
-        amount = b.cost
+        amount = int(float(b.cost))
         start = start_end['start'].strftime('%Y-%m-%d')
         end = start_end['end'].strftime('%Y-%m-%d')
         type = b.category.name

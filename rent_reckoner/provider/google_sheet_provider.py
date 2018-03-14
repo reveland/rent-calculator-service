@@ -20,7 +20,7 @@ class GoogleDataProvider(DataProvider):
         return bills
 
     def get_residents(self, habitant_id):
-        residents = self.   residents_sheet.get_all_records()
+        residents = self.residents_sheet.get_all_records()
         residents = self.__transform_date_to_int(residents)
         return residents
 

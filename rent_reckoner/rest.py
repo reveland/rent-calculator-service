@@ -20,11 +20,11 @@ def create_response(data):
     resp.headers['Access-Control-Allow-Origin'] = '*'
     return resp
 
-@app.route("/switch/<int:habitant_id>")
+@app.route("/switch/<int:data_provider_id>")
 def switch_data_Provider(data_provider_id):
     global DATA_PROVIDER_ID
     DATA_PROVIDER_ID = data_provider_id
-    return create_response("switched to" + str(DATA_PROVIDER_ID))
+    return create_response("switched to " + str(DATA_PROVIDER_ID))
 
 @app.route("/habitations/<int:habitant_id>/bills_to_ui")
 def get_bills_to_ui(habitant_id):

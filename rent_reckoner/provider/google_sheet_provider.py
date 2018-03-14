@@ -59,5 +59,5 @@ class GoogleDataProvider(DataProvider):
 
     def __increment_end_date_with_one_day(self, items):
         for item in items:
-            item["end"] = item["end"] + 86400
+            item["end"] = item["end"] + 86399
         return items

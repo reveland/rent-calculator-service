@@ -38,7 +38,7 @@ class DataProvider(ABC):
 
         result_bills = []
         for bill in source_data:
-            if bill not in target_data:
+            if bill not in target_data and 'amount' in bill:
                 result_bills.append(bill)
         
         for bill in result_bills:
@@ -46,6 +46,5 @@ class DataProvider(ABC):
         return result_bills
     
     def to_iso8601(self, date_int):
-        print(date_int)
         date = datetime.datetime.fromtimestamp(date_int)
         return date.strftime("%Y-%m-%d")

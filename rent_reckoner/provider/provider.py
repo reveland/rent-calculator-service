@@ -31,7 +31,7 @@ class DataProvider(ABC):
     def save_residents(self, habitant_id, residents):
         pass
 
-    def merge(self, habitant_id, target_data_provider):
+    def merge_bills(self, habitant_id, target_data_provider):
         """Merge data from source DataProvider to target DataProvider"""
         source_data = self.get_bills(habitant_id)
         target_data = target_data_provider.get_bills(habitant_id)
@@ -52,7 +52,27 @@ class DataProvider(ABC):
         for bill in result_bills:
             target_data_provider.add_bill(habitant_id, bill['start'], bill['end'], bill['type'], bill['amount'], bill['paid_by'])
         return result_bills
-    
+
+    def merge_payments(self, habitant_id, target_data_provider):
+        """Merge data from source DataProvider to target DataProvider"""
+        source_data = self.get_payments(habitant_id)
+        target_data = target_data_provider.get_payments(habitant_id)
+
+        for payment in source_data:
+            payment["date"] = self.to_iso8601(payment["date"])
+
+        for payment in target_data:
+            payment["date"] = self.to_iso8601(payment["date"])
+
+        result_payments = []
+        for payment in source_data:
+            if payment not in target_data and 'amount' in payment:
+                result_payments.append(payment)
+        
+        for payment in result_payments:
+            target_data_provider.add_payment(habitant_id, payment['amount'], payment['to'], bill['from'], bill['date'])
+        return result_payments
+
     def to_iso8601(self, date_int):
         date = datetime.datetime.fromtimestamp(date_int)
         return date.strftime("%Y-%m-%d")

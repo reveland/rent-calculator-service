@@ -79,7 +79,7 @@ def add_bill(habitant_id):
 def merge(habitant_id, source_id, target_id):
     DATA_PROVIDERS[source_id].merge_bills(habitant_id, DATA_PROVIDERS[target_id])
     DATA_PROVIDERS[source_id].merge_payments(habitant_id, DATA_PROVIDERS[target_id])
-    return 'merged'
+    return create_response('merged')
 
 @app.route("/splitwise", methods=['GET'])
 def splitwise():

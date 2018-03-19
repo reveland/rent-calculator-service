@@ -42,6 +42,13 @@ class SplitwiseDataProvider(DataProvider):
 
     def get_residents(self, habitant_id):
         pass
+    
+    def get_cash_movements(self, habitant_id):    
+        expenses = self.sw.getExpenses(limit = 0, dated_after='2017-11-22T19:00:00Z')
+        payments = filter(lambda e: e.getPayment() and e.getDeletedAt() is None, expenses)
+        for item in payments:
+            item["date"] = calendar.timegm(parse(item["date"]).timetuple())
+        return list(map(self.map_payment, payments))
 
     def add_bill(self, habitant_id, start, end, type, amount, paid_by):
         pass
@@ -49,8 +56,21 @@ class SplitwiseDataProvider(DataProvider):
     def add_resident(self, habitant_id, start, end, name):
         pass
 
+    def add_cash_movement(self, habitant_id, amount, payer, receiver, date):
+        pass
+
     def save_residents(self, habitant_id, residents):
         pass
+
+    def map_payment(self, expense):
+        users = expense.getUsers()
+        payer = users[0] if float(users[0].getPaidShare()) > 0 else users[1]
+        receiver = users[1] if float(users[1].getOwedShare()) > 0 else users[0]
+        amount = expense.getCost()
+        payer = payer.getFirstName()
+        receiver = receiver.getFirstName()
+        created_at = expense.getCreatedAt()
+        return {"amount": amount, 'from': payer, 'to': receiver, 'date': created_at}
 
     def get_group_by_name(self, name):
         groups = self.sw.getGroups()

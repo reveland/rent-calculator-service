@@ -50,6 +50,12 @@ def get_residents(habitant_id):
     residents = json.dumps(residents)
     return create_response(residents)
 
+@app.route("/habitations/<int:habitant_id>/payments")
+def get_payments(habitant_id):
+    payments = DATA_PROVIDERS[DATA_PROVIDER_ID].get_payments(habitant_id)
+    payments = json.dumps(payments)
+    return create_response(payments)
+
 @app.route("/habitations/<int:habitant_id>/update_depts")
 def update_depts(habitant_id):
     RENT_RECKONER.update_debts(habitant_id)

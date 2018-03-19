@@ -26,7 +26,7 @@ class GoogleDataProvider(DataProvider):
         residents = self.__increment_end_date_with_one_day(residents)
         return residents
     
-    def get_cash_movements(self, habitant_id):
+    def get_payments(self, habitant_id):
         cash_movements =  self.cash_flow_sheet.get_all_records()
         for item in cash_movements:
             item["date"] = calendar.timegm(parse(item["date"]).timetuple())
@@ -38,7 +38,7 @@ class GoogleDataProvider(DataProvider):
     def add_resident(self, habitant_id, start, end, name):
         self.residents_sheet.append_row([start, end, name, '0', '0'])
 
-    def add_cash_movement(self, habitant_id, amount, payer, receiver, date):
+    def add_payment(self, habitant_id, amount, payer, receiver, date):
         self.cash_flow_sheet.append_row([amount, payer, receiver, date])
 
     def save_residents(self, habitant_id, residents):

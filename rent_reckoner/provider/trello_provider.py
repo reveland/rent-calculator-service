@@ -34,11 +34,17 @@ class TrelloDataProvider(DataProvider):
         residents = self.__transform_date_to_int(residents)
         return residents
 
+    def get_payments(self, habitant_id):
+        pass
+
     def add_bill(self, habitant_id, start, end, type, amount, paid_by):
         self.board.open_lists()[4].add_card(start + ' ' + end + ' ' + type + ' ' + str(amount) + ' ' + paid_by)
 
     def add_resident(self, habitant_id, start, end, name):
         self.board.open_lists()[3].add_card(start + ' ' + end + ' ' + name + ' 0 0')
+
+    def add_payment(self, habitant_id, amount, payer, receiver, date):
+        pass
 
     def save_residents(self, habitant_id, residents):
         cards = self.board.open_lists()[3].list_cards()

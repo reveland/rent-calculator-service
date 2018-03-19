@@ -12,7 +12,7 @@ class DataProvider(ABC):
         pass
     
     @abstractmethod
-    def get_cash_movements(self, habitant_id):
+    def get_payments(self, habitant_id):
         pass
 
     @abstractmethod
@@ -24,7 +24,7 @@ class DataProvider(ABC):
         pass
 
     @abstractmethod
-    def add_cash_movement(self, habitant_id, amount, payer, receiver, date):
+    def add_payment(self, habitant_id, amount, payer, receiver, date):
         pass
 
     @abstractmethod

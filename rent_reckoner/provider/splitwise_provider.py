@@ -43,7 +43,7 @@ class SplitwiseDataProvider(DataProvider):
     def get_residents(self, habitant_id):
         pass
     
-    def get_cash_movements(self, habitant_id):    
+    def get_payments(self, habitant_id):    
         expenses = self.sw.getExpenses(limit = 0, dated_after='2017-11-22T19:00:00Z')
         payments = filter(lambda e: e.getPayment() and e.getDeletedAt() is None, expenses)
         for item in payments:
@@ -56,7 +56,7 @@ class SplitwiseDataProvider(DataProvider):
     def add_resident(self, habitant_id, start, end, name):
         pass
 
-    def add_cash_movement(self, habitant_id, amount, payer, receiver, date):
+    def add_payment(self, habitant_id, amount, payer, receiver, date):
         pass
 
     def save_residents(self, habitant_id, residents):

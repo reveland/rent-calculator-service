@@ -70,7 +70,7 @@ class DataProvider(ABC):
                 result_payments.append(payment)
         
         for payment in result_payments:
-            target_data_provider.add_payment(habitant_id, payment['amount'], payment['to'], bill['from'], bill['date'])
+            target_data_provider.add_payment(habitant_id, payment['amount'], payment['to'], payment['from'], payment['date'])
         return result_payments
 
     def to_iso8601(self, date_int):

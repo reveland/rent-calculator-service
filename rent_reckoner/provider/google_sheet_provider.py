@@ -10,6 +10,7 @@ class GoogleDataProvider(DataProvider):
         scope = ['https://spreadsheets.google.com/feeds']
         creds = ServiceAccountCredentials.from_json_keyfile_name('./rent_reckoner/provider/client_secret.json', scope)
         client = gspread.authorize(creds)
+        self.cash_flow_sheet = client.open('Aradi').get_worksheet(2)
         self.residents_sheet = client.open('Aradi').get_worksheet(1)
         self.bills_sheet = client.open('Aradi').get_worksheet(0)
 
@@ -24,12 +25,21 @@ class GoogleDataProvider(DataProvider):
         residents = self.__transform_date_to_int(residents)
         residents = self.__increment_end_date_with_one_day(residents)
         return residents
+    
+    def get_cash_movements(self, habitant_id):
+        cash_movements =  self.cash_flow_sheet.get_all_records()
+        for item in cash_movements:
+            item["date"] = calendar.timegm(parse(item["date"]).timetuple())
+        return cash_movements
 
     def add_bill(self, habitant_id, start, end, type, amount, paid_by):
         self.bills_sheet.append_row([start, end, type, str(amount), paid_by])
 
     def add_resident(self, habitant_id, start, end, name):
         self.residents_sheet.append_row([start, end, name, '0', '0'])
+
+    def add_cash_movement(self, habitant_id, amount, payer, receiver, date):
+        self.cash_flow_sheet.append_row([amount, payer, receiver, date])
 
     def save_residents(self, habitant_id, residents):
         start_cell_list = self.residents_sheet.range('A2:A' + str(len(residents) + 1))

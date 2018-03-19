@@ -46,9 +46,10 @@ class SplitwiseDataProvider(DataProvider):
     def get_payments(self, habitant_id):    
         expenses = self.sw.getExpenses(limit = 0, dated_after='2017-11-22T19:00:00Z')
         payments = filter(lambda e: e.getPayment() and e.getDeletedAt() is None, expenses)
+        payments = list(map(self.map_payment, payments))
         for item in payments:
             item["date"] = calendar.timegm(parse(item["date"]).timetuple())
-        return list(map(self.map_payment, payments))
+        return payments
 
     def add_bill(self, habitant_id, start, end, type, amount, paid_by):
         pass

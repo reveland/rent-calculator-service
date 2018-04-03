@@ -10,6 +10,7 @@ from splitwise.category import Category
 from functools import reduce
 from datetime import datetime
 from dateutil import parser
+import unidecode
 
 class SplitwiseDataProvider(DataProvider):
 
@@ -94,6 +95,7 @@ class SplitwiseDataProvider(DataProvider):
             'sep':9, 'oct':10, 'nov':11, 'dec':12}
         try:
             s = string.strip()[:3].lower()
+            s = unidecode.unidecode(s)
             return m[s]
         except:
             if len(string) < 3:

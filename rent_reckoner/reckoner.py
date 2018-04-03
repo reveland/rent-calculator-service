@@ -198,13 +198,19 @@ class RentReckoner(object):
         residents_copy = self.data_provider.get_residents(habitant_id)
         residents = self.data_provider.get_residents(habitant_id)
         bills = self.data_provider.get_bills(habitant_id)
-        
+        payments = self.data_provider.get_payments(habitant_id)
+
         bills = list(filter(lambda b: 'paid_by' in b and b['paid_by'] != '', bills))
 
         for resident in residents_copy:
             resident["dept"] = self.get_debt(habitant_id, resident, residents, bills)
             resident["start"] = self.to_iso8601(resident["start"])
             resident["end"] = self.to_iso8601(resident["end"])
+
+        for p in payments:
+            for r in residents_copy:
+                if r['name'] == p['from']: r['dept'] -= p['amount']
+                if r['name'] == p['to']: r['dept'] += p['amount']
 
         self.data_provider.save_residents(habitant_id, residents_copy)
         return residents_copy

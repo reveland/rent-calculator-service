@@ -56,6 +56,13 @@ def get_payments(habitant_id):
     payments = json.dumps(payments)
     return create_response(payments)
 
+@app.route("/habitations/<int:habitant_id>/payments", methods=['POST'])
+def add_payments(habitant_id):
+    payment = request.get_json()
+    
+    DATA_PROVIDERS[DATA_PROVIDER_ID].add_payment(habitant_id, payment['amount'], payment['payer'], payment['receiver'], payment['date'])
+    return create_response(payment)
+
 @app.route("/habitations/<int:habitant_id>/update_depts")
 def update_depts(habitant_id):
     RENT_RECKONER.update_debts(habitant_id)
